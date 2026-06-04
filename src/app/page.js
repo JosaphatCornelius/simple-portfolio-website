@@ -204,21 +204,43 @@ function useActiveSection() {
   const [active, setActive] = useState("hero");
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(visible.target.id);
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5, 1] }
-    );
+    const elements = sections
+      .map(({ id }) => document.getElementById(id))
+      .filter(Boolean);
 
-    for (const { id } of sections) {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    }
-    return () => observer.disconnect();
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const line = window.innerHeight * 0.35;
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      let current = elements[0]?.id ?? "hero";
+      if (atBottom) {
+        current = elements[elements.length - 1]?.id ?? current;
+      } else {
+        for (const element of elements) {
+          if (element.getBoundingClientRect().top <= line) current = element.id;
+        }
+      }
+      setActive(current);
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return active;
@@ -259,6 +281,125 @@ function SideNav({ active }) {
   );
 }
 
+function MobileMenu({ active }) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [open]);
+
+  return (
+    <div className="lg:hidden">
+      <button
+        type="button"
+        aria-label={open ? "Close menu" : "Open menu"}
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        className="fixed right-4 top-4 z-50 grid size-11 place-items-center rounded-md border border-white/15 bg-blue-deep/70 backdrop-blur-sm transition-colors hover:border-blue-bright"
+      >
+        <span className="relative block h-4 w-6">
+          <span
+            className={`absolute left-0 block h-0.5 w-6 bg-blue-bright transition-all duration-300 ${
+              open ? "top-1/2 -translate-y-1/2 rotate-45" : "top-0"
+            }`}
+          />
+          <span
+            className={`absolute left-0 top-1/2 block h-0.5 w-6 -translate-y-1/2 bg-blue-bright transition-opacity duration-300 ${
+              open ? "opacity-0" : "opacity-100"
+            }`}
+          />
+          <span
+            className={`absolute left-0 block h-0.5 w-6 bg-blue-bright transition-all duration-300 ${
+              open ? "top-1/2 -translate-y-1/2 -rotate-45" : "bottom-0"
+            }`}
+          />
+        </span>
+      </button>
+
+      <div
+        inert={!open}
+        className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <button
+          type="button"
+          aria-label="Close menu"
+          tabIndex={-1}
+          onClick={() => setOpen(false)}
+          className="absolute inset-0 h-full w-full cursor-default bg-blue-deep/92 backdrop-blur-md"
+        />
+        <nav className="relative flex h-full flex-col justify-center gap-2 pl-8">
+          {sections.map((section, index) => {
+            const isActive = active === section.id;
+            return (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                onClick={() => setOpen(false)}
+                className={`menu-item group relative flex items-center gap-3 transition-all duration-300 ${
+                  open ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
+                }`}
+                style={{
+                  paddingLeft: `${index * 0.6}rem`,
+                  transitionDelay: open ? `${index * 55 + 90}ms` : "0ms",
+                }}
+              >
+                <span className="font-mono text-xs not-italic text-blue-pale/60">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="relative px-3 py-1">
+                  {isActive && (
+                    <span className="slant absolute inset-0 -left-1 bg-accent-red shadow-[0_0_24px_rgba(255,34,71,0.55)]" />
+                  )}
+                  <span
+                    className={`relative text-3xl sm:text-4xl ${
+                      isActive ? "text-white" : "text-blue-pale/70"
+                    }`}
+                  >
+                    {section.label}
+                  </span>
+                </span>
+              </a>
+            );
+          })}
+          <div
+            className={`mt-10 flex gap-3 pl-3 transition-all duration-300 ${
+              open ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
+            }`}
+            style={{ transitionDelay: open ? "400ms" : "0ms" }}
+          >
+            {socials.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.label}
+                className="grid size-10 place-items-center rounded-full border border-white/15 bg-blue-deep/50 text-blue-bright transition-colors hover:border-blue-bright hover:text-white"
+              >
+                <SocialIcon label={social.label} className="size-5" />
+              </a>
+            ))}
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
+}
+
 function SideRail() {
   return (
     <aside className="pointer-events-none fixed right-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-4 xl:flex">
@@ -270,8 +411,8 @@ function SideRail() {
           rel="noreferrer"
           className="pointer-events-auto group flex w-40 items-center gap-3 rounded-md border border-white/10 bg-blue-deep/50 px-3 py-2 backdrop-blur-sm transition duration-200 hover:-translate-x-1 hover:border-blue-bright"
         >
-          <span className="grid size-7 place-items-center rounded-full bg-blue-bright/20 text-xs font-bold text-blue-bright transition-transform duration-200 group-hover:scale-110">
-            {social.label[0]}
+          <span className="grid size-7 place-items-center rounded-full bg-blue-bright/20 text-blue-bright transition-transform duration-200 group-hover:scale-110">
+            <SocialIcon label={social.label} className="size-4" />
           </span>
           <span className="flex-1">
             <span className="block text-xs font-semibold uppercase tracking-wide text-blue-pale group-hover:text-white">
@@ -412,6 +553,30 @@ function WaterCaustics() {
   );
 }
 
+function SocialIcon({ label, className = "size-5" }) {
+  if (label === "LinkedIn") {
+    return (
+      <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.74v20.52C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z" />
+      </svg>
+    );
+  }
+
+  if (label === "Email") {
+    return (
+      <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M2 5.5C2 4.67 2.67 4 3.5 4h17c.83 0 1.5.67 1.5 1.5v13c0 .83-.67 1.5-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm2.06.5 7.94 5.29L19.94 6H4.06ZM20 7.87l-7.44 4.96a1 1 0 0 1-1.12 0L4 7.87V18h16V7.87Z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.21 11.16.6.11.82-.25.82-.56 0-.28-.01-1.02-.02-2-3.34.71-4.04-1.58-4.04-1.58-.55-1.37-1.33-1.74-1.33-1.74-1.09-.73.08-.71.08-.71 1.2.08 1.83 1.21 1.83 1.21 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.57-2.67-.3-5.47-1.31-5.47-5.83 0-1.29.47-2.34 1.24-3.17-.12-.3-.54-1.52.12-3.16 0 0 1.01-.32 3.3 1.21.96-.26 1.98-.39 3-.4 1.02.01 2.04.14 3 .4 2.29-1.53 3.3-1.21 3.3-1.21.66 1.64.24 2.86.12 3.16.77.83 1.24 1.88 1.24 3.17 0 4.53-2.81 5.53-5.49 5.82.43.36.81 1.08.81 2.18 0 1.58-.01 2.85-.01 3.24 0 .31.22.68.83.56C20.56 21.88 24 17.48 24 12.29 24 5.78 18.63.5 12 .5z" />
+    </svg>
+  );
+}
+
 function SectionHeading({ index, children }) {
   return (
     <div className="mb-8 flex items-baseline gap-4">
@@ -502,13 +667,14 @@ export default function Home() {
       <div className="water-glow" aria-hidden="true" />
       <WaterCaustics />
       <SideNav active={active} />
+      <MobileMenu active={active} />
       <SideRail />
       <CommandBar active={active} />
 
-      <main className="mx-auto w-full max-w-6xl px-6 pb-20 lg:pl-48 xl:pr-36">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:pl-48 xl:pr-36">
         <section
           id="hero"
-          className="flex min-h-screen flex-col justify-center py-24"
+          className="flex min-h-screen flex-col justify-center py-24 items-center text-center sm:items-start sm:text-left"
         >
           <p
             className="hero-item menu-item mb-4 text-sm text-blue-bright"
@@ -518,7 +684,7 @@ export default function Home() {
               <span className="unslant inline-block">Portfolio</span>
             </span>
           </p>
-          <h1 className="display text-6xl text-white sm:text-8xl">
+          <h1 className="display text-5xl text-white sm:text-7xl lg:text-8xl">
             <span className="name-line" style={{ animationDelay: "240ms" }}>
               Josaphat
             </span>
@@ -536,7 +702,7 @@ export default function Home() {
             Android, and game experiences that feel alive.
           </p>
           <div
-            className="hero-item mt-10 flex flex-wrap gap-4"
+            className="hero-item mt-10 flex flex-wrap justify-center gap-4 sm:justify-start"
             style={{ animationDelay: "660ms" }}
           >
             <a

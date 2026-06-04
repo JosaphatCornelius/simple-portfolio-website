@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const sections = [
   { id: "hero", label: "Home" },
@@ -105,7 +105,7 @@ const experience = [
       "Full Stack Developer and SQA on internal systems in Jakarta, applying full-stack development and design thinking on-site.",
   },
   {
-    role: "Mobile Developer Intern",
+    role: "Website Developer Intern",
     company: "PT Asuransi Artarindo · Internship",
     period: "Jul 2024 — Dec 2024",
     detail:
@@ -122,6 +122,83 @@ const socials = [
   },
   { label: "Email", href: "mailto:jojo.31.liu@gmail.com", fill: 64 },
 ];
+
+function useInView() {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, inView];
+}
+
+function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...props }) {
+  const [ref, inView] = useInView();
+  return (
+    <Tag
+      ref={ref}
+      className={`reveal ${inView ? "is-visible" : ""} ${className}`.trim()}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      {...props}
+    >
+      {children}
+    </Tag>
+  );
+}
+
+function useBackgroundParallax() {
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    if (reduced.matches || !fine.matches) return;
+
+    const root = document.documentElement;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let frame = 0;
+
+    const handleMove = (event) => {
+      targetX = (event.clientX / window.innerWidth - 0.5) * 2;
+      targetY = (event.clientY / window.innerHeight - 0.5) * 2;
+    };
+
+    const tick = () => {
+      currentX += (targetX - currentX) * 0.06;
+      currentY += (targetY - currentY) * 0.06;
+      root.style.setProperty("--pointer-x", currentX.toFixed(4));
+      root.style.setProperty("--pointer-y", currentY.toFixed(4));
+      frame = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("pointermove", handleMove, { passive: true });
+    frame = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener("pointermove", handleMove);
+      cancelAnimationFrame(frame);
+      root.style.removeProperty("--pointer-x");
+      root.style.removeProperty("--pointer-y");
+    };
+  }, []);
+}
 
 function useActiveSection() {
   const [active, setActive] = useState("hero");
@@ -156,7 +233,7 @@ function SideNav({ active }) {
           <a
             key={section.id}
             href={`#${section.id}`}
-            className="menu-item pointer-events-auto group relative flex items-center"
+            className="menu-item pointer-events-auto group relative flex items-center transition-transform duration-200 hover:translate-x-1"
           >
             <span className="w-8 font-mono text-xs not-italic text-blue-pale/60">
               {String(index + 1).padStart(2, "0")}
@@ -191,9 +268,9 @@ function SideRail() {
           href={social.href}
           target="_blank"
           rel="noreferrer"
-          className="pointer-events-auto group flex w-40 items-center gap-3 rounded-md border border-white/10 bg-blue-deep/50 px-3 py-2 backdrop-blur-sm transition-colors hover:border-blue-bright"
+          className="pointer-events-auto group flex w-40 items-center gap-3 rounded-md border border-white/10 bg-blue-deep/50 px-3 py-2 backdrop-blur-sm transition duration-200 hover:-translate-x-1 hover:border-blue-bright"
         >
-          <span className="grid size-7 place-items-center rounded-full bg-blue-bright/20 text-xs font-bold text-blue-bright">
+          <span className="grid size-7 place-items-center rounded-full bg-blue-bright/20 text-xs font-bold text-blue-bright transition-transform duration-200 group-hover:scale-110">
             {social.label[0]}
           </span>
           <span className="flex-1">
@@ -275,6 +352,66 @@ function LinkIcon({ href }) {
   );
 }
 
+function WaterCaustics() {
+  return (
+    <svg
+      className="water-caustics"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id="caustics"
+          x="-30%"
+          y="-30%"
+          width="160%"
+          height="160%"
+          colorInterpolationFilters="sRGB"
+        >
+          {/* Large, low-frequency cells read as pool caustics rather than
+              fine static. baseFrequency only undulates slightly and slowly. */}
+          <feTurbulence
+            type="turbulence"
+            baseFrequency="0.006 0.009"
+            numOctaves="2"
+            seed="11"
+            result="noise"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="40s"
+              repeatCount="indefinite"
+              calcMode="spline"
+              keyTimes="0;0.5;1"
+              keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
+              values="0.006 0.009;0.0075 0.0075;0.006 0.009"
+            />
+          </feTurbulence>
+          {/* alpha = 1.1*noise - 0.55 keeps only the bright peaks, turning the
+              cloud into thin caustic veins; RGB tints them blue-white. */}
+          <feColorMatrix
+            in="noise"
+            type="matrix"
+            values="0 0 0 0 0.55  0 0 0 0 0.82  0 0 0 0 1  0 0 0 1.1 -0.55"
+          />
+        </filter>
+      </defs>
+      <rect x="-15%" y="-15%" width="130%" height="130%" filter="url(#caustics)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          dur="26s"
+          repeatCount="indefinite"
+          calcMode="spline"
+          keyTimes="0;0.5;1"
+          keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
+          values="0 0; 6 38; 0 0"
+        />
+      </rect>
+    </svg>
+  );
+}
+
 function SectionHeading({ index, children }) {
   return (
     <div className="mb-8 flex items-baseline gap-4">
@@ -346,7 +483,7 @@ function ContactForm() {
       />
       <button
         type="submit"
-        className="slant self-start bg-accent-red px-7 py-3 shadow-[0_0_24px_rgba(255,34,71,0.5)] transition hover:brightness-110"
+        className="slant self-start bg-accent-red px-7 py-3 shadow-[0_0_24px_rgba(255,34,71,0.5)] transition duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-95"
       >
         <span className="unslant menu-item block text-lg text-white">
           Send Message
@@ -358,9 +495,12 @@ function ContactForm() {
 
 export default function Home() {
   const active = useActiveSection();
+  useBackgroundParallax();
 
   return (
     <>
+      <div className="water-glow" aria-hidden="true" />
+      <WaterCaustics />
       <SideNav active={active} />
       <SideRail />
       <CommandBar active={active} />
@@ -370,25 +510,38 @@ export default function Home() {
           id="hero"
           className="flex min-h-screen flex-col justify-center py-24"
         >
-          <p className="menu-item mb-4 text-sm text-blue-bright">
+          <p
+            className="hero-item menu-item mb-4 text-sm text-blue-bright"
+            style={{ animationDelay: "100ms" }}
+          >
             <span className="slant inline-block bg-blue-bright/15 px-2 py-0.5">
               <span className="unslant inline-block">Portfolio</span>
             </span>
           </p>
           <h1 className="display text-6xl text-white sm:text-8xl">
-            Josaphat
+            <span className="name-line" style={{ animationDelay: "240ms" }}>
+              Josaphat
+            </span>
             <br />
-            Cornelius
-            <span className="text-accent-red">/</span>
+            <span className="name-line" style={{ animationDelay: "380ms" }}>
+              Cornelius
+              <span className="text-accent-red">/</span>
+            </span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-blue-pale sm:text-xl">
+          <p
+            className="hero-item mt-6 max-w-xl text-lg text-blue-pale sm:text-xl"
+            style={{ animationDelay: "540ms" }}
+          >
             Full Stack Developer in Jakarta building seamless, user-friendly web,
             Android, and game experiences that feel alive.
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div
+            className="hero-item mt-10 flex flex-wrap gap-4"
+            style={{ animationDelay: "660ms" }}
+          >
             <a
               href="#projects"
-              className="slant bg-accent-red px-7 py-3 shadow-[0_0_24px_rgba(255,34,71,0.5)] transition hover:brightness-110"
+              className="slant bg-accent-red px-7 py-3 shadow-[0_0_24px_rgba(255,34,71,0.5)] transition-transform duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-95"
             >
               <span className="unslant menu-item block text-lg text-white">
                 View Work
@@ -396,7 +549,7 @@ export default function Home() {
             </a>
             <a
               href="#contact"
-              className="slant border border-blue-bright/60 px-7 py-3 transition hover:bg-blue-bright/10"
+              className="slant border border-blue-bright/60 px-7 py-3 transition duration-200 hover:-translate-y-0.5 hover:bg-blue-bright/10 active:translate-y-0 active:scale-95"
             >
               <span className="unslant menu-item block text-lg text-blue-bright">
                 Contact
@@ -406,8 +559,13 @@ export default function Home() {
         </section>
 
         <section id="about" className="scroll-mt-20 py-24">
-          <SectionHeading index="01">About</SectionHeading>
-          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr]">
+          <Reveal>
+            <SectionHeading index="01">About</SectionHeading>
+          </Reveal>
+          <Reveal
+            delay={120}
+            className="grid gap-10 md:grid-cols-[1.4fr_1fr]"
+          >
             <div className="space-y-4 text-lg leading-relaxed text-blue-pale">
               <p>
                 I&apos;m a full-stack developer who loves turning ideas into
@@ -431,92 +589,104 @@ export default function Home() {
                 {skills.map((skill) => (
                   <li
                     key={skill}
-                    className="rounded-full border border-white/15 bg-blue-deep/40 px-3 py-1 text-sm text-blue-pale"
+                    className="cursor-default rounded-full border border-white/15 bg-blue-deep/40 px-3 py-1 text-sm text-blue-pale transition duration-200 hover:-translate-y-0.5 hover:border-blue-bright hover:bg-blue-bright/10 hover:text-white"
                   >
                     {skill}
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         <section id="projects" className="scroll-mt-20 py-24">
-          <SectionHeading index="02">Projects</SectionHeading>
+          <Reveal>
+            <SectionHeading index="02">Projects</SectionHeading>
+          </Reveal>
           <div className="grid gap-5 sm:grid-cols-2">
-            {projects.map((project) => (
-              <article
-                key={project.name}
-                className="group flex flex-col rounded-lg border border-white/10 bg-blue-deep/40 p-6 transition hover:-translate-y-1 hover:border-blue-bright"
-              >
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="display text-2xl text-white">
-                    {project.name}
-                  </h3>
-                  <span className="menu-item text-xs text-accent-red">
-                    {project.tag}
-                  </span>
-                </div>
-                <p className="flex-1 text-blue-pale">{project.blurb}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {project.stack.map((tech) => (
-                    <li
-                      key={tech}
-                      className="font-mono text-xs text-blue-bright"
-                    >
-                      #{tech}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
-                  {project.links.map((link) => (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="slant border border-blue-bright/40 px-3 py-1 transition hover:bg-blue-bright/10"
-                    >
-                      <span className="unslant menu-item flex items-center gap-1.5 text-xs text-blue-bright">
-                        <LinkIcon href={link.href} />
-                        {link.label}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </article>
+            {projects.map((project, index) => (
+              <Reveal key={project.name} delay={index * 70} className="h-full">
+                <article className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-blue-deep/40 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-bright hover:bg-blue-deep/60 hover:shadow-[0_18px_50px_-20px_rgba(94,155,255,0.65)]">
+                  <span className="slant absolute left-4 top-0 h-1 w-12 origin-left scale-x-0 bg-accent-red transition-transform duration-300 group-hover:scale-x-100" />
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="display text-2xl text-white transition-colors duration-200 group-hover:text-blue-bright">
+                      {project.name}
+                    </h3>
+                    <span className="menu-item text-xs text-accent-red">
+                      {project.tag}
+                    </span>
+                  </div>
+                  <p className="flex-1 text-blue-pale">{project.blurb}</p>
+                  <ul className="mt-4 flex flex-wrap gap-2">
+                    {project.stack.map((tech) => (
+                      <li
+                        key={tech}
+                        className="font-mono text-xs text-blue-bright"
+                      >
+                        #{tech}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
+                    {project.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="slant border border-blue-bright/40 px-3 py-1 transition duration-200 hover:-translate-y-0.5 hover:border-blue-bright hover:bg-blue-bright/15"
+                      >
+                        <span className="unslant menu-item flex items-center gap-1.5 text-xs text-blue-bright">
+                          <LinkIcon href={link.href} />
+                          {link.label}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </section>
 
         <section id="experience" className="scroll-mt-20 py-24">
-          <SectionHeading index="03">Experience</SectionHeading>
+          <Reveal>
+            <SectionHeading index="03">Experience</SectionHeading>
+          </Reveal>
           <ol className="relative border-l border-white/15 pl-6">
-            {experience.map((job) => (
-              <li key={job.company} className="mb-10 last:mb-0">
-                <span className="slant absolute -left-[7px] mt-1.5 size-3 bg-accent-red" />
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="display text-2xl text-white">{job.role}</h3>
-                  <span className="font-mono text-sm text-blue-bright">
-                    {job.period}
-                  </span>
-                </div>
-                <p className="menu-item text-sm text-blue-pale">
-                  {job.company}
-                </p>
-                <p className="mt-2 max-w-2xl text-blue-pale">{job.detail}</p>
+            {experience.map((job, index) => (
+              <li key={job.company} className="group mb-10 last:mb-0">
+                <span className="slant absolute -left-[7px] mt-1.5 size-3 bg-accent-red transition-transform duration-300 group-hover:scale-150 group-hover:shadow-[0_0_18px_rgba(255,34,71,0.8)]" />
+                <Reveal delay={index * 90}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="display text-2xl text-white transition-colors duration-200 group-hover:text-blue-bright">
+                      {job.role}
+                    </h3>
+                    <span className="font-mono text-sm text-blue-bright">
+                      {job.period}
+                    </span>
+                  </div>
+                  <p className="menu-item text-sm text-blue-pale">
+                    {job.company}
+                  </p>
+                  <p className="mt-2 max-w-2xl text-blue-pale">{job.detail}</p>
+                </Reveal>
               </li>
             ))}
           </ol>
         </section>
 
         <section id="contact" className="scroll-mt-20 py-24">
-          <SectionHeading index="04">Contact</SectionHeading>
-          <p className="mb-8 max-w-xl text-lg text-blue-pale">
+          <Reveal>
+            <SectionHeading index="04">Contact</SectionHeading>
+          </Reveal>
+          <Reveal delay={100} as="p" className="mb-8 max-w-xl text-lg text-blue-pale">
             Have a project in mind or just want to say hello? Drop a line and
             let&apos;s talk.
-          </p>
-          <ContactForm />
+          </Reveal>
+          <Reveal delay={200}>
+            <ContactForm />
+          </Reveal>
         </section>
       </main>
     </>

@@ -113,6 +113,60 @@ body {
   }
 }
 
+/* Letters keep their skew on a wrapper so the static pose (reduced motion)
+   still looks composed; only the bounce lives here. */
+@keyframes loading-letter-bounce {
+  0%,
+  55%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-0.3em) scale(1.1);
+  }
+  38% {
+    transform: translateY(0.06em) scale(0.98);
+  }
+}
+
+@keyframes loading-sweep {
+  from {
+    transform: translateX(-130%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(430%) skewX(-18deg);
+  }
+}
+
+@keyframes loading-diamond-spin {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes loading-dot-blink {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes loading-shard-tumble {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-22px) rotate(160deg);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .animate-caustic {
     animation: caustic-drift 16s ease-in-out infinite alternate;
@@ -140,6 +194,31 @@ body {
   .animate-bubble {
     animation-name: bubble-rise;
     animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  /* Delay is set per letter via inline style for the staggered wave. */
+  .animate-loading-letter {
+    animation: loading-letter-bounce 1.1s ease-in-out infinite;
+  }
+
+  .animate-loading-sweep {
+    animation: loading-sweep 2.4s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+  }
+
+  .animate-loading-diamond {
+    animation: loading-diamond-spin 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  /* Delay is set per dot via inline style. */
+  .animate-loading-dot {
+    animation: loading-dot-blink 1.2s ease-in-out infinite;
+  }
+
+  /* Duration and delay are set per shard via inline style. */
+  .animate-loading-shard {
+    animation-name: loading-shard-tumble;
+    animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { ViewTransition, useEffect, useState } from "react";
 import { PROFILE } from "./data";
 
 export const MENU_COLORS = [
@@ -63,11 +63,17 @@ export function Background({ activeLabel }) {
           directions; pan distance matches the tile so the loop is seamless */}
       <div
         className="animate-caustic-pan-a absolute -inset-[60%] mix-blend-screen"
-        style={{ backgroundImage: CAUSTIC_TILE_A, backgroundSize: "440px 380px" }}
+        style={{
+          backgroundImage: CAUSTIC_TILE_A,
+          backgroundSize: "440px 380px",
+        }}
       />
       <div
         className="animate-caustic-pan-b absolute -inset-[60%] mix-blend-screen"
-        style={{ backgroundImage: CAUSTIC_TILE_B, backgroundSize: "560px 460px" }}
+        style={{
+          backgroundImage: CAUSTIC_TILE_B,
+          backgroundSize: "560px 460px",
+        }}
       />
 
       {/* Light rays from the surface, swaying slowly */}
@@ -149,44 +155,48 @@ export function Background({ activeLabel }) {
 
 export function WalletBox() {
   return (
-    <Link
-      href="/"
-      className="fixed top-4 left-4 z-40 border-2 border-black bg-white px-3 py-1.5 text-black shadow-[4px_4px_0_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 lg:top-6 lg:left-6 lg:border-[3px] lg:px-5 lg:py-2 lg:shadow-[6px_6px_0_rgba(0,0,0,0.25)]"
-    >
-      <div className="font-display text-base tracking-wide lg:text-2xl">
-        ¥ {PROFILE.name}
-      </div>
-      <div className="text-[9px] font-bold tracking-widest lowercase lg:text-[11px]">
-        {PROFILE.role.toLowerCase()}
-      </div>
-    </Link>
+    <ViewTransition enter="vt-wallet" exit="vt-wallet" default="none">
+      <Link
+        href="/"
+        className="fixed top-4 left-4 z-40 border-2 border-black bg-white px-3 py-1.5 text-black shadow-[4px_4px_0_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 lg:top-6 lg:left-6 lg:border-[3px] lg:px-5 lg:py-2 lg:shadow-[6px_6px_0_rgba(0,0,0,0.25)]"
+      >
+        <div className="font-display text-base tracking-wide lg:text-2xl">
+          ¥ {PROFILE.name}
+        </div>
+        <div className="text-[9px] font-bold tracking-widest lowercase lg:text-[11px]">
+          {PROFILE.role.toLowerCase()}
+        </div>
+      </Link>
+    </ViewTransition>
   );
 }
 
 export function SocialChips() {
   return (
-    <div className="fixed top-6 right-6 z-40 hidden flex-col gap-6 lg:flex">
-      {PROFILE.socials.map((social) => (
-        <a
-          key={social.name}
-          href={social.href}
-          target="_blank"
-          rel="noreferrer"
-          title={social.name}
-          className="group flex flex-col items-end gap-1.5"
-        >
-          <span className="font-display flex h-14 w-14 -skew-x-6 items-center justify-center bg-[linear-gradient(135deg,#9ff0ff,#1f8de0)] text-xl text-[#03124d] shadow-[4px_4px_0_rgba(0,10,80,0.45)] transition-transform group-hover:-translate-y-1">
-            <span className="skew-x-6">{social.label}</span>
-          </span>
-          <span className="h-3 w-20 -skew-x-12 bg-[#1450d8] p-0.5 shadow-[3px_3px_0_rgba(0,10,80,0.45)]">
-            <span className="flex h-full w-full flex-col justify-between">
-              <span className="h-[3px] w-3/4 bg-[#2de1ff]" />
-              <span className="h-[3px] w-1/2 bg-[#ffd400]" />
+    <ViewTransition enter="vt-social" exit="vt-social" default="none">
+      <div className="fixed top-6 right-6 z-40 hidden flex-col gap-6 lg:flex">
+        {PROFILE.socials.map((social) => (
+          <a
+            key={social.name}
+            href={social.href}
+            target="_blank"
+            rel="noreferrer"
+            title={social.name}
+            className="group flex flex-col items-end gap-1.5"
+          >
+            <span className="font-display flex h-14 w-14 -skew-x-6 items-center justify-center bg-[linear-gradient(135deg,#9ff0ff,#1f8de0)] text-xl text-[#03124d] shadow-[4px_4px_0_rgba(0,10,80,0.45)] transition-transform group-hover:-translate-y-1">
+              <span className="skew-x-6">{social.label}</span>
             </span>
-          </span>
-        </a>
-      ))}
-    </div>
+            <span className="h-3 w-20 -skew-x-12 bg-[#1450d8] p-0.5 shadow-[3px_3px_0_rgba(0,10,80,0.45)]">
+              <span className="flex h-full w-full flex-col justify-between">
+                <span className="h-[3px] w-3/4 bg-[#2de1ff]" />
+                <span className="h-[3px] w-1/2 bg-[#ffd400]" />
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </ViewTransition>
   );
 }
 
@@ -202,16 +212,18 @@ export function MobileMenu() {
 
   return (
     <div className="lg:hidden">
-      <button
-        type="button"
-        aria-label="Open menu"
-        onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-50 flex h-12 w-12 -skew-x-6 flex-col items-center justify-center gap-1.5 border-2 border-black bg-white shadow-[4px_4px_0_rgba(0,0,0,0.35)]"
-      >
-        <span className="h-[3px] w-6 -skew-x-12 bg-black" />
-        <span className="ml-1 h-[3px] w-6 -skew-x-12 bg-black" />
-        <span className="h-[3px] w-6 -skew-x-12 bg-black" />
-      </button>
+      <ViewTransition enter="vt-burger" exit="vt-burger" default="none">
+        <button
+          type="button"
+          aria-label="Open menu"
+          onClick={() => setOpen(true)}
+          className="fixed top-4 right-4 z-50 flex h-12 w-12 -skew-x-6 flex-col items-center justify-center gap-1.5 border-2 border-black bg-white shadow-[4px_4px_0_rgba(0,0,0,0.35)]"
+        >
+          <span className="h-[3px] w-6 -skew-x-12 bg-black" />
+          <span className="ml-1 h-[3px] w-6 -skew-x-12 bg-black" />
+          <span className="h-[3px] w-6 -skew-x-12 bg-black" />
+        </button>
+      </ViewTransition>
 
       {open && (
         <div className="fixed inset-0 z-50 flex flex-col justify-center overflow-hidden bg-[linear-gradient(160deg,rgba(13,60,200,0.97)_0%,rgba(4,22,110,0.98)_100%)] px-10">

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { formatArticleDate, getAllArticles } from "../_lib/articles";
+import { Reveal } from "../_components/reveal";
 import {
   Background,
   Card,
@@ -25,62 +27,71 @@ export default async function ArticlesPage() {
       <SocialChips />
       <MobileMenu />
 
-      <div className="fixed right-8 bottom-6 z-40 hidden lg:block">
-        <Link
-          href="/"
-          className="font-display group flex items-center gap-2 text-2xl text-white"
-        >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
-            B
-          </span>
-          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
-            Back
-          </span>
-        </Link>
-      </div>
-
-      <main className="relative z-10 mx-auto max-w-screen-2xl px-5 pt-28 pb-16 md:py-20 lg:px-0">
-        <div className="lg:ml-auto lg:w-[52%] lg:pr-[4%]">
+      <ViewTransition enter="vt-back" exit="vt-back" default="none">
+        <div className="fixed right-8 bottom-6 z-40 hidden lg:block">
           <Link
             href="/"
-            className="font-display mb-6 inline-block skew-x-[-10deg] text-xl text-[#9ff0ff] hover:text-white [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]"
+            className="font-display group flex items-center gap-2 text-2xl text-white"
           >
-            ← BACK TO MENU
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+              B
+            </span>
+            <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+              Back
+            </span>
           </Link>
-          <div className="block">
-            <SectionTitle>ARTICLES</SectionTitle>
-          </div>
-          <div className="flex flex-col gap-8">
-            {articles.map((article, index) => (
-              <Link
-                key={article.slug}
-                href={`/articles/${article.slug}`}
-                className={`group block ${index % 2 ? "lg:ml-12" : ""}`}
-              >
-                <Card className="transition-transform group-hover:-translate-y-1">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h2 className="font-display skew-x-[-10deg] text-2xl text-[#0a2ec4] group-hover:text-[#e60012] md:text-3xl">
-                      {article.title}
-                    </h2>
-                    <span className="font-display -skew-x-12 bg-[#e60012] px-3 py-0.5 text-sm text-white">
-                      <span className="block skew-x-12">
-                        {formatArticleDate(article.date)}
-                      </span>
-                    </span>
-                  </div>
-                  <p className="mt-3 leading-relaxed">{article.summary}</p>
-                  <p className="font-display mt-4 flex items-center gap-2 text-lg text-[#e60012]">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
-                      A
-                    </span>
-                    Read
-                  </p>
-                </Card>
-              </Link>
-            ))}
-          </div>
         </div>
-      </main>
+      </ViewTransition>
+
+      <ViewTransition enter="vt-main" exit="vt-main" default="none">
+        <main className="relative z-10 mx-auto max-w-screen-2xl px-5 pt-28 pb-16 md:py-20 lg:px-0">
+          <div className="lg:ml-auto lg:w-[52%] lg:pr-[4%]">
+            <Link
+              href="/"
+              className="font-display mb-6 inline-block skew-x-[-10deg] text-xl text-[#9ff0ff] hover:text-white [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]"
+            >
+              ← BACK TO MENU
+            </Link>
+            <Reveal from="left">
+              <SectionTitle>ARTICLES</SectionTitle>
+            </Reveal>
+            <div className="flex flex-col gap-8">
+              {articles.map((article, index) => (
+                <Reveal
+                  key={article.slug}
+                  from={index % 2 ? "left" : "right"}
+                  delay={index * 100}
+                >
+                  <Link
+                    href={`/articles/${article.slug}`}
+                    className={`group block ${index % 2 ? "lg:ml-12" : ""}`}
+                  >
+                    <Card className="transition-transform group-hover:-translate-y-1">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <h2 className="font-display skew-x-[-10deg] text-2xl text-[#0a2ec4] group-hover:text-[#e60012] md:text-3xl">
+                          {article.title}
+                        </h2>
+                        <span className="font-display -skew-x-12 bg-[#e60012] px-3 py-0.5 text-sm text-white">
+                          <span className="block skew-x-12">
+                            {formatArticleDate(article.date)}
+                          </span>
+                        </span>
+                      </div>
+                      <p className="mt-3 leading-relaxed">{article.summary}</p>
+                      <p className="font-display mt-4 flex items-center gap-2 text-lg text-[#e60012]">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
+                          A
+                        </span>
+                        Read
+                      </p>
+                    </Card>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </main>
+      </ViewTransition>
     </div>
   );
 }

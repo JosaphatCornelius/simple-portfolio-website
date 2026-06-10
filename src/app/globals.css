@@ -113,6 +113,115 @@ body {
   }
 }
 
+/* Route transitions: every chrome piece flies off on its own path (P3R menu
+   style). Each vt-* class sets a flight vector; the shared rules below animate
+   old snapshots out along it and new snapshots in from it, staggered. */
+@keyframes vt-fly {
+  from {
+    transform: translate(var(--vt-x, 0), var(--vt-y, 0)) rotate(var(--vt-rot, 0deg));
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+::view-transition-old(.vt-wallet),
+::view-transition-old(.vt-social),
+::view-transition-old(.vt-burger),
+::view-transition-old(.vt-menu),
+::view-transition-old(.vt-hint),
+::view-transition-old(.vt-back),
+::view-transition-old(.vt-main) {
+  animation: vt-fly 260ms cubic-bezier(0.55, 0, 0.85, 0.36) both reverse;
+}
+
+::view-transition-new(.vt-wallet),
+::view-transition-new(.vt-social),
+::view-transition-new(.vt-burger),
+::view-transition-new(.vt-menu),
+::view-transition-new(.vt-hint),
+::view-transition-new(.vt-back),
+::view-transition-new(.vt-main) {
+  /* Overshooting bezier snaps each piece slightly past rest, P3R-style. */
+  animation: vt-fly 480ms cubic-bezier(0.22, 1.25, 0.36, 1) both;
+  animation-delay: var(--vt-delay, 0ms);
+}
+
+::view-transition-old(.vt-wallet),
+::view-transition-new(.vt-wallet) {
+  --vt-x: -32vw;
+  --vt-y: -6vh;
+  --vt-rot: -10deg;
+  --vt-delay: 240ms;
+}
+
+::view-transition-old(.vt-social),
+::view-transition-new(.vt-social) {
+  --vt-x: 30vw;
+  --vt-y: -4vh;
+  --vt-rot: 7deg;
+  --vt-delay: 320ms;
+}
+
+::view-transition-old(.vt-burger),
+::view-transition-new(.vt-burger) {
+  --vt-x: 12vw;
+  --vt-y: -24vh;
+  --vt-rot: 14deg;
+  --vt-delay: 300ms;
+}
+
+::view-transition-old(.vt-menu),
+::view-transition-new(.vt-menu) {
+  --vt-x: -48vw;
+  --vt-rot: -4deg;
+  --vt-delay: 200ms;
+}
+
+::view-transition-old(.vt-hint),
+::view-transition-new(.vt-hint) {
+  --vt-x: 12vw;
+  --vt-y: 32vh;
+  --vt-rot: 6deg;
+  --vt-delay: 420ms;
+}
+
+::view-transition-old(.vt-back),
+::view-transition-new(.vt-back) {
+  --vt-x: 30vw;
+  --vt-y: 10vh;
+  --vt-rot: 6deg;
+  --vt-delay: 420ms;
+}
+
+::view-transition-old(.vt-main),
+::view-transition-new(.vt-main) {
+  --vt-y: 16vh;
+  --vt-rot: -1.5deg;
+  --vt-delay: 260ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Scroll reveals: section pieces slide out of frame when they leave the
+   viewport and snap back in when they return. The hidden pose is always
+   applied; the transition only runs when motion is allowed, so reduced
+   motion gets an instant swap. */
+.reveal[data-hidden] {
+  opacity: 0;
+  transform: translate(var(--reveal-x, 0), var(--reveal-y, 0))
+    rotate(var(--reveal-rot, 0deg));
+}
+
 /* Letters keep their skew on a wrapper so the static pose (reduced motion)
    still looks composed; only the bounce lives here. */
 @keyframes loading-letter-bounce {
@@ -220,5 +329,12 @@ body {
     animation-name: loading-shard-tumble;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
+  }
+
+  .reveal {
+    transition:
+      transform 560ms cubic-bezier(0.22, 1.25, 0.36, 1),
+      opacity 360ms ease;
+    transition-delay: var(--reveal-delay, 0ms);
   }
 }

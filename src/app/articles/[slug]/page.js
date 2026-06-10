@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { formatArticleDate, getArticleSlugs } from "../../_lib/articles";
 import {
   Background,
@@ -37,45 +38,49 @@ export default async function ArticlePage({ params }) {
       <SocialChips />
       <MobileMenu />
 
-      <div className="fixed right-8 bottom-6 z-40 hidden lg:block">
-        <Link
-          href="/articles"
-          className="font-display group flex items-center gap-2 text-2xl text-white"
-        >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
-            B
-          </span>
-          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
-            Back
-          </span>
-        </Link>
-      </div>
-
-      <main className="relative z-10 mx-auto max-w-screen-2xl px-5 pt-28 pb-16 md:py-20 lg:px-0">
-        <div className="lg:ml-auto lg:w-[56%] lg:pr-[4%]">
+      <ViewTransition enter="vt-back" exit="vt-back" default="none">
+        <div className="fixed right-8 bottom-6 z-40 hidden lg:block">
           <Link
             href="/articles"
-            className="font-display mb-6 inline-block skew-x-[-10deg] text-xl text-[#9ff0ff] hover:text-white [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]"
+            className="font-display group flex items-center gap-2 text-2xl text-white"
           >
-            ← ALL ARTICLES
-          </Link>
-          <div className="mb-8">
-            <span className="font-display inline-block -skew-x-12 bg-[#e60012] px-4 py-1 text-lg text-white shadow-[4px_4px_0_rgba(120,0,10,0.3)]">
-              <span className="block skew-x-12">
-                {formatArticleDate(metadata.date)}
-              </span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+              B
             </span>
-            <h1 className="font-display mt-4 skew-x-[-10deg] text-4xl leading-[0.95] text-white [text-shadow:4px_4px_0_rgba(3,18,110,0.55)] md:text-6xl">
-              {metadata.title}
-            </h1>
-          </div>
-          <Card>
-            <article>
-              <Article />
-            </article>
-          </Card>
+            <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+              Back
+            </span>
+          </Link>
         </div>
-      </main>
+      </ViewTransition>
+
+      <ViewTransition enter="vt-main" exit="vt-main" default="none">
+        <main className="relative z-10 mx-auto max-w-screen-2xl px-5 pt-28 pb-16 md:py-20 lg:px-0">
+          <div className="lg:ml-auto lg:w-[56%] lg:pr-[4%]">
+            <Link
+              href="/articles"
+              className="font-display mb-6 inline-block skew-x-[-10deg] text-xl text-[#9ff0ff] hover:text-white [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]"
+            >
+              ← ALL ARTICLES
+            </Link>
+            <div className="mb-8">
+              <span className="font-display inline-block -skew-x-12 bg-[#e60012] px-4 py-1 text-lg text-white shadow-[4px_4px_0_rgba(120,0,10,0.3)]">
+                <span className="block skew-x-12">
+                  {formatArticleDate(metadata.date)}
+                </span>
+              </span>
+              <h1 className="font-display mt-4 skew-x-[-10deg] text-4xl leading-[0.95] text-white [text-shadow:4px_4px_0_rgba(3,18,110,0.55)] md:text-6xl">
+                {metadata.title}
+              </h1>
+            </div>
+            <Card>
+              <article>
+                <Article />
+              </article>
+            </Card>
+          </div>
+        </main>
+      </ViewTransition>
     </div>
   );
 }

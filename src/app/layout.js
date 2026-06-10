@@ -1,4 +1,5 @@
 import { Anton, Geist, Geist_Mono } from "next/font/google";
+import { PageFlight } from "./_components/page-flight";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,7 +30,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${anton.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <PageFlight>{children}</PageFlight>
+      </body>
     </html>
   );
 }

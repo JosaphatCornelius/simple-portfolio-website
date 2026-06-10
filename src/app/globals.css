@@ -113,103 +113,89 @@ body {
   }
 }
 
-/* Route transitions: every chrome piece flies off on its own path (P3R menu
-   style). Each vt-* class sets a flight vector; the shared rules below animate
-   old snapshots out along it and new snapshots in from it, staggered. */
-@keyframes vt-fly {
+/* Page flight: chrome pieces fly in on page mount and scatter off-screen when
+   PageFlight adds .page-leaving before a navigation. Each fly-* class sets a
+   flight vector. The keyframes only define the displaced pose — entry
+   animates toward and exit away from each element's natural styles — because
+   Tailwind v4 translate utilities (e.g. the menu's -translate-y-1/2) use the
+   same standalone translate property and an explicit resting keyframe would
+   permanently override them. */
+@keyframes fly-in {
   from {
-    transform: translate(var(--vt-x, 0), var(--vt-y, 0)) rotate(var(--vt-rot, 0deg));
+    translate: var(--fly-x, 0px) var(--fly-y, 0px);
+    rotate: var(--fly-rot, 0deg);
     opacity: 0;
   }
+}
+
+@keyframes fly-out {
   to {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 1;
+    translate: var(--fly-x, 0px) var(--fly-y, 0px);
+    rotate: var(--fly-rot, 0deg);
+    opacity: 0;
   }
 }
 
-::view-transition-old(.vt-wallet),
-::view-transition-old(.vt-social),
-::view-transition-old(.vt-burger),
-::view-transition-old(.vt-menu),
-::view-transition-old(.vt-hint),
-::view-transition-old(.vt-back),
-::view-transition-old(.vt-main) {
-  animation: vt-fly 260ms cubic-bezier(0.55, 0, 0.85, 0.36) both reverse;
-}
-
-::view-transition-new(.vt-wallet),
-::view-transition-new(.vt-social),
-::view-transition-new(.vt-burger),
-::view-transition-new(.vt-menu),
-::view-transition-new(.vt-hint),
-::view-transition-new(.vt-back),
-::view-transition-new(.vt-main) {
-  /* Overshooting bezier snaps each piece slightly past rest, P3R-style. */
-  animation: vt-fly 480ms cubic-bezier(0.22, 1.25, 0.36, 1) both;
-  animation-delay: var(--vt-delay, 0ms);
-}
-
-::view-transition-old(.vt-wallet),
-::view-transition-new(.vt-wallet) {
-  --vt-x: -32vw;
-  --vt-y: -6vh;
-  --vt-rot: -10deg;
-  --vt-delay: 240ms;
-}
-
-::view-transition-old(.vt-social),
-::view-transition-new(.vt-social) {
-  --vt-x: 30vw;
-  --vt-y: -4vh;
-  --vt-rot: 7deg;
-  --vt-delay: 320ms;
-}
-
-::view-transition-old(.vt-burger),
-::view-transition-new(.vt-burger) {
-  --vt-x: 12vw;
-  --vt-y: -24vh;
-  --vt-rot: 14deg;
-  --vt-delay: 300ms;
-}
-
-::view-transition-old(.vt-menu),
-::view-transition-new(.vt-menu) {
-  --vt-x: -48vw;
-  --vt-rot: -4deg;
-  --vt-delay: 200ms;
-}
-
-::view-transition-old(.vt-hint),
-::view-transition-new(.vt-hint) {
-  --vt-x: 12vw;
-  --vt-y: 32vh;
-  --vt-rot: 6deg;
-  --vt-delay: 420ms;
-}
-
-::view-transition-old(.vt-back),
-::view-transition-new(.vt-back) {
-  --vt-x: 30vw;
-  --vt-y: 10vh;
-  --vt-rot: 6deg;
-  --vt-delay: 420ms;
-}
-
-::view-transition-old(.vt-main),
-::view-transition-new(.vt-main) {
-  --vt-y: 16vh;
-  --vt-rot: -1.5deg;
-  --vt-delay: 260ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(*),
-  ::view-transition-new(*),
-  ::view-transition-group(*) {
-    animation-duration: 0s !important;
-    animation-delay: 0s !important;
+@media (prefers-reduced-motion: no-preference) {
+  .fly {
+    /* Overshooting bezier snaps each piece slightly past rest, P3R-style.
+       Backwards fill hides the piece during its stagger delay only; after
+       landing, the animation releases the element back to its own styles. */
+    animation: fly-in 480ms cubic-bezier(0.22, 1.25, 0.36, 1) backwards;
+    animation-delay: var(--fly-delay, 0ms);
   }
+
+  .page-leaving .fly {
+    animation: fly-out 260ms cubic-bezier(0.55, 0, 0.85, 0.36) forwards;
+    animation-delay: calc(var(--fly-delay, 0ms) / 3);
+  }
+}
+
+.fly-wallet {
+  --fly-x: -32vw;
+  --fly-y: -6vh;
+  --fly-rot: -10deg;
+  --fly-delay: 240ms;
+}
+
+.fly-social {
+  --fly-x: 30vw;
+  --fly-y: -4vh;
+  --fly-rot: 7deg;
+  --fly-delay: 320ms;
+}
+
+.fly-burger {
+  --fly-x: 12vw;
+  --fly-y: -24vh;
+  --fly-rot: 14deg;
+  --fly-delay: 300ms;
+}
+
+.fly-menu {
+  --fly-x: -48vw;
+  --fly-rot: -4deg;
+  --fly-delay: 200ms;
+}
+
+.fly-hint {
+  --fly-x: 12vw;
+  --fly-y: 32vh;
+  --fly-rot: 6deg;
+  --fly-delay: 420ms;
+}
+
+.fly-back {
+  --fly-x: 30vw;
+  --fly-y: 10vh;
+  --fly-rot: 6deg;
+  --fly-delay: 420ms;
+}
+
+.fly-main {
+  --fly-y: 16vh;
+  --fly-rot: -1.5deg;
+  --fly-delay: 260ms;
 }
 
 /* Scroll reveals: section pieces slide out of frame when they leave the

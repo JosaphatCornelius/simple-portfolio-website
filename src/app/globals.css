@@ -1,208 +1,145 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050a2e;
-  --foreground: #eaf0ff;
-  --blue-deep: #06103f;
-  --blue-royal: #1631c4;
-  --blue-electric: #2f6bff;
-  --blue-bright: #5e9bff;
-  --blue-pale: #9fc0ff;
-  --accent-red: #ff2247;
+  --background: #0a2ec4;
+  --foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-blue-deep: var(--blue-deep);
-  --color-blue-royal: var(--blue-royal);
-  --color-blue-electric: var(--blue-electric);
-  --color-blue-bright: var(--blue-bright);
-  --color-blue-pale: var(--blue-pale);
-  --color-accent-red: var(--accent-red);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-anton);
+  --color-menu-red: #e60012;
+  --color-menu-pink: #ff2d78;
+  --color-menu-cyan: #2de1ff;
+  --color-menu-yellow: #ffd400;
+  --color-deep-navy: #03124d;
 }
 
 html {
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* legacy Edge / IE */
-}
-
-html::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, modern Edge */
 }
 
 body {
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  background-color: var(--blue-deep);
-  background-image:
-    repeating-linear-gradient(
-      115deg,
-      rgba(255, 255, 255, 0.035) 0px,
-      rgba(255, 255, 255, 0.035) 2px,
-      transparent 2px,
-      transparent 46px
-    ),
-    radial-gradient(
-      130% 95% at 18% 12%,
-      var(--blue-electric) 0%,
-      var(--blue-royal) 38%,
-      var(--blue-deep) 78%
-  );
-  background-attachment: fixed;
+  overflow-x: hidden;
 }
 
-/* Persona-style slanted highlight banner */
-.slant {
-  transform: skewX(-11deg);
+@keyframes caustic-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-4%, 3%) scale(1.08);
+  }
+  100% {
+    transform: translate(3%, -2%) scale(0.96);
+  }
 }
 
-.unslant {
-  transform: skewX(11deg);
+@keyframes ray-shimmer {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
 }
 
-/* Big display headings: heavy, condensed feel, italic slant */
-.display {
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  line-height: 0.92;
+/* Base rotation matches the static rotate-[22deg] utility on the rays so
+   disabling animations (reduced motion) leaves them in the same pose. */
+@keyframes ray-sway {
+  0%,
+  100% {
+    transform: rotate(22deg) translateX(0);
+  }
+  50% {
+    transform: rotate(25deg) translateX(48px);
+  }
 }
 
-.menu-item {
-  font-weight: 800;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
-/* Thin status bar used on the side rail and stat chips */
-.statbar {
-  background: linear-gradient(
-    90deg,
-    var(--blue-bright) 0%,
-    var(--blue-bright) var(--fill, 70%),
-    rgba(255, 255, 255, 0.12) var(--fill, 70%),
-    rgba(255, 255, 255, 0.12) 100%
-  );
-}
-
-/* Soft depth glow that drifts opposite the caustics for a parallax feel.
-   --pointer-x / --pointer-y are normalized (-1..1) and set per frame in JS. */
-.water-glow {
-  position: fixed;
-  inset: -12%;
-  z-index: -2;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      40% 40% at 28% 22%,
-      rgba(120, 210, 255, 0.4),
-      transparent 70%
-    ),
-    radial-gradient(
-      45% 45% at 75% 72%,
-      rgba(40, 90, 210, 0.45),
-      transparent 72%
-    );
-  filter: blur(30px);
-  transform: translate3d(
-    calc(var(--pointer-x, 0) * -22px),
-    calc(var(--pointer-y, 0) * -16px),
-    0
-  );
-  will-change: transform;
-}
-
-/* Flowing water caustics layered over the background gradient. Scaled up a
-   touch so the parallax shift never exposes an edge. */
-.water-caustics {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.55;
-  transform: scale(1.1)
-    translate3d(
-      calc(var(--pointer-x, 0) * 26px),
-      calc(var(--pointer-y, 0) * 20px),
-      0
-    );
-  will-change: transform;
-}
-
-/* Scroll-reveal: rise + fade as elements enter the viewport */
-.reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s cubic-bezier(0.22, 0.7, 0.2, 1);
-  will-change: opacity, transform;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-/* Hero load-in stagger */
-@keyframes hero-rise {
+/* Pan distances equal the layers' background-size tiles, so the loops are
+   seamless: 440x380 for sheet A, 560x460 for sheet B. */
+@keyframes caustic-pan-a {
   from {
-    opacity: 0;
-    transform: translateY(28px);
+    transform: translate(0, 0);
   }
   to {
-    opacity: 1;
-    transform: none;
+    transform: translate(440px, 380px);
   }
 }
 
-.hero-item {
-  opacity: 0;
-  animation: hero-rise 0.75s cubic-bezier(0.22, 0.7, 0.2, 1) forwards;
-}
-
-/* Hero name: each line slides in from the left with a skew that straightens */
-@keyframes name-slide {
+@keyframes caustic-pan-b {
   from {
-    opacity: 0;
-    transform: translateX(-48px) skewX(-12deg);
+    transform: translate(0, 0);
   }
   to {
-    opacity: 1;
-    transform: translateX(0) skewX(0);
+    transform: translate(-560px, 460px);
   }
 }
 
-.name-line {
-  display: inline-block;
-  opacity: 0;
-  animation: name-slide 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+@keyframes bubble-rise {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(16px, -55vh);
+  }
+  85% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-8px, -112vh);
+    opacity: 0;
+  }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+@media (prefers-reduced-motion: no-preference) {
+  .animate-caustic {
+    animation: caustic-drift 16s ease-in-out infinite alternate;
   }
 
-  .water-caustics {
-    display: none;
+  .animate-ray {
+    animation:
+      ray-sway 16s ease-in-out infinite,
+      ray-shimmer 7s ease-in-out infinite;
   }
 
-  .reveal,
-  .hero-item,
-  .name-line {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
+  .animate-float {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  .animate-caustic-pan-a {
+    animation: caustic-pan-a 26s linear infinite;
+  }
+
+  .animate-caustic-pan-b {
+    animation: caustic-pan-b 44s linear infinite;
+  }
+
+  /* Duration and delay are set per bubble via inline style. */
+  .animate-bubble {
+    animation-name: bubble-rise;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
   }
 }

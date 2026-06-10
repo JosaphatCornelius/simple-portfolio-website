@@ -1,860 +1,446 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import {
+  ABOUT_PARAGRAPHS,
+  CONTACT_INTRO,
+  EXPERIENCE,
+  PROFILE,
+  PROJECTS,
+  SKILL_GAUGES,
+  TOOLKIT,
+} from "./_components/data";
+import {
+  Background,
+  Card,
+  MENU_COLORS,
+  MENU_OFFSETS,
+  MENU_TILTS,
+  MobileMenu,
+  SectionTitle,
+  SocialChips,
+  WalletBox,
+} from "./_components/p3r";
 
-const sections = [
-  { id: "hero", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
-  { id: "contact", label: "Contact" },
+const SECTIONS = [
+  { id: "home", label: "HOME", hint: "Welcome" },
+  { id: "about", label: "ABOUT", hint: "Who I Am" },
+  { id: "projects", label: "PROJECTS", hint: "Things I Built" },
+  { id: "experience", label: "EXPERIENCE", hint: "Where I've Been" },
+  { id: "contact", label: "CONTACT", hint: "Reach Out" },
 ];
 
-const skills = [
-  "Next.js",
-  "React",
-  "JavaScript",
-  "TypeScript",
-  "ASP.NET Core",
-  "C#",
-  "Node.js",
-  "Tailwind CSS",
-  "Framer Motion",
-  "PostgreSQL",
-  "Docker",
-  "Git",
+// Route entries navigate instead of scrolling.
+const MENU_ITEMS = [
+  ...SECTIONS,
+  { id: "articles", label: "ARTICLES", href: "/articles" },
 ];
 
-const projects = [
-  {
-    name: "P3R Portfolio",
-    tag: "In Progress",
-    blurb:
-      "A Persona 3 Reload inspired personal portfolio with bold JRPG aesthetics, sharp diagonal geometry, and Framer Motion driven animations.",
-    stack: ["Next.js", "JavaScript", "Tailwind CSS", "Framer Motion"],
-    links: [
-      {
-        label: "Code",
-        href: "https://github.com/JosaphatCornelius/website-general-portfolio",
-      },
-    ],
-  },
-  {
-    name: "E-Ticketing System",
-    tag: "Completed",
-    blurb:
-      "A full-stack e-ticketing platform pairing a React admin dashboard with an ASP.NET Core, Dockerized backend — authentication, user management, and ticket handling end to end.",
-    stack: ["React", "TypeScript", "ASP.NET Core", "Docker"],
-    links: [
-      {
-        label: "Frontend",
-        href: "https://github.com/JosaphatCornelius/E-Ticketing_Frontend",
-      },
-      {
-        label: "Backend",
-        href: "https://github.com/JosaphatCornelius/E-Ticketing_Backend",
-      },
-    ],
-  },
-  {
-    name: "Should I Buy It?",
-    tag: "Completed",
-    blurb:
-      "A purchase decision tool offering a calm second opinion before you spend — weighing affordability, budget fit, usefulness, and impulse against the opportunity cost of investing instead.",
-    stack: ["Next.js", "JavaScript", "Tailwind CSS"],
-    links: [
-      { label: "Live", href: "https://josaphat-should-i-buy-it.netlify.app/" },
-      {
-        label: "Code",
-        href: "https://github.com/JosaphatCornelius/should-i-buy-it",
-      },
-    ],
-  },
-  {
-    name: "React Native App",
-    tag: "Completed",
-    blurb:
-      "An Android app built in a team of three at SMK Strada Jakarta, sharpening collaboration, communication, and a genuinely user-friendly mobile experience from the ground up.",
-    stack: ["React Native", "Android", "JavaScript"],
-    links: [
-      { label: "Demo", href: "https://www.youtube.com/watch?v=UXfdgU3EXvQ" },
-    ],
-  },
-  {
-    name: "F1 Driving Experience",
-    tag: "Completed",
-    blurb:
-      "A responsive, interactive Formula 1 themed frontend built in 10th grade at SMK Strada Jakarta — designed to react to the user and deployed live on free hosting.",
-    stack: ["HTML", "CSS", "JavaScript"],
-    links: [
-      { label: "Live", href: "https://josaphat-f1-project.netlify.app/" },
-      {
-        label: "Code",
-        href: "https://github.com/JosaphatCornelius/Formula-1-Website-Project",
-      },
-    ],
-  },
-];
-
-const experience = [
-  {
-    role: "IT Project Development & Infrastructure Support",
-    company: "PT Asuransi Artarindo · Full-time",
-    period: "May 2025 — Now",
-    detail:
-      "Full Stack Developer and SQA on internal systems in Jakarta, applying full-stack development and design thinking on-site.",
-  },
-  {
-    role: "Website Developer Intern",
-    company: "PT Asuransi Artarindo · Internship",
-    period: "Jul 2024 — Dec 2024",
-    detail:
-      "Six-month on-site internship focused on mobile application development in North Jakarta.",
-  },
-];
-
-const socials = [
-  { label: "GitHub", href: "https://github.com/JosaphatCornelius", fill: 92 },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/josaphat-cornelius-540141277/",
-    fill: 78,
-  },
-  { label: "Email", href: "mailto:jojo.31.liu@gmail.com", fill: 64 },
-];
-
-function useInView() {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
-    );
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-
-  return [ref, inView];
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
-function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...props }) {
-  const [ref, inView] = useInView();
+function MenuLabel({ isActive, color, children }) {
   return (
-    <Tag
-      ref={ref}
-      className={`reveal ${inView ? "is-visible" : ""} ${className}`.trim()}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
-      {...props}
-    >
-      {children}
-    </Tag>
+    <>
+      {isActive && (
+        <>
+          <span className="absolute -inset-x-8 inset-y-1 -rotate-2 bg-[#ff6ea8] [clip-path:polygon(4%_18%,100%_0,94%_88%,0_100%)]" />
+          <span className="absolute -inset-x-7 inset-y-1 -rotate-2 bg-white [clip-path:polygon(3%_15%,100%_2%,95%_85%,0_98%)]" />
+        </>
+      )}
+      <span
+        className="font-display relative block skew-x-[-12deg] text-5xl tracking-wide transition-all duration-150 group-hover:translate-x-2 xl:text-6xl"
+        style={{
+          color: isActive ? "#e60012" : color,
+          textShadow: isActive
+            ? "3px 3px 0 rgba(120,0,10,0.35)"
+            : "3px 4px 0 rgba(3,18,110,0.45)",
+        }}
+      >
+        {children}
+      </span>
+    </>
   );
 }
 
-function useBackgroundParallax() {
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (reduced.matches || !fine.matches) return;
-
-    const root = document.documentElement;
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let frame = 0;
-
-    const handleMove = (event) => {
-      targetX = (event.clientX / window.innerWidth - 0.5) * 2;
-      targetY = (event.clientY / window.innerHeight - 0.5) * 2;
-    };
-
-    const tick = () => {
-      currentX += (targetX - currentX) * 0.06;
-      currentY += (targetY - currentY) * 0.06;
-      root.style.setProperty("--pointer-x", currentX.toFixed(4));
-      root.style.setProperty("--pointer-y", currentY.toFixed(4));
-      frame = requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("pointermove", handleMove, { passive: true });
-    frame = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener("pointermove", handleMove);
-      cancelAnimationFrame(frame);
-      root.style.removeProperty("--pointer-x");
-      root.style.removeProperty("--pointer-y");
-    };
-  }, []);
-}
-
-function useActiveSection() {
-  const [active, setActive] = useState("hero");
-
-  useEffect(() => {
-    const elements = sections
-      .map(({ id }) => document.getElementById(id))
-      .filter(Boolean);
-
-    let ticking = false;
-
-    const update = () => {
-      ticking = false;
-      const line = window.innerHeight * 0.35;
-      const atBottom =
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 2;
-
-      let current = elements[0]?.id ?? "hero";
-      if (atBottom) {
-        current = elements[elements.length - 1]?.id ?? current;
-      } else {
-        for (const element of elements) {
-          if (element.getBoundingClientRect().top <= line) current = element.id;
-        }
-      }
-      setActive(current);
-    };
-
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
-
-  return active;
-}
-
-function SideNav({ active }) {
+function MenuNav({ activeId }) {
   return (
-    <nav className="pointer-events-none fixed left-0 top-0 z-30 hidden h-screen flex-col justify-center gap-2 pl-6 lg:flex xl:pl-10">
-      {sections.map((section, index) => {
-        const isActive = active === section.id;
-        return (
-          <a
-            key={section.id}
-            href={`#${section.id}`}
-            className="menu-item pointer-events-auto group relative flex items-center transition-transform duration-200 hover:translate-x-1"
-          >
-            <span className="w-8 font-mono text-xs not-italic text-blue-pale/60">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className="relative px-3 py-1">
-              {isActive && (
-                <span className="slant absolute inset-0 -left-1 bg-accent-red shadow-[0_0_24px_rgba(255,34,71,0.55)]" />
-              )}
-              <span
-                className={`relative text-2xl transition-colors xl:text-3xl ${
-                  isActive
-                    ? "text-white"
-                    : "text-blue-pale/55 group-hover:text-blue-bright"
-                }`}
+    <nav className="fixed top-1/2 left-[27%] z-30 hidden -translate-y-1/2 lg:block">
+        <ul className="flex flex-col gap-1">
+          {MENU_ITEMS.map((item, index) => {
+            const isActive = item.id === activeId;
+            return (
+              <li
+                key={item.id}
+                style={{
+                  marginLeft: MENU_OFFSETS[index],
+                  transform: `rotate(${MENU_TILTS[index]}deg)`,
+                }}
               >
-                {section.label}
-              </span>
-            </span>
-          </a>
-        );
-      })}
+                {item.href ? (
+                  <Link href={item.href} className="group relative block">
+                    <MenuLabel isActive={false} color={MENU_COLORS[index]}>
+                      {item.label}
+                    </MenuLabel>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(item.id)}
+                    className="group relative block cursor-pointer"
+                  >
+                    <MenuLabel isActive={isActive} color={MENU_COLORS[index]}>
+                      {item.label}
+                    </MenuLabel>
+                  </button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
     </nav>
   );
 }
 
-function MobileMenu({ active }) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleKey = (event) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [open]);
+function CommandHint({ activeId }) {
+  const activeIndex = SECTIONS.findIndex((section) => section.id === activeId);
+  const active = SECTIONS[activeIndex] ?? SECTIONS[0];
+  const next = SECTIONS[(activeIndex + 1) % SECTIONS.length];
 
   return (
-    <div className="lg:hidden">
-      <button
-        type="button"
-        aria-label={open ? "Close menu" : "Open menu"}
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-        className="fixed right-4 top-4 z-50 grid size-11 place-items-center rounded-md border border-white/15 bg-blue-deep/70 backdrop-blur-sm transition-colors hover:border-blue-bright"
-      >
-        <span className="relative block h-4 w-6">
-          <span
-            className={`absolute left-0 block h-0.5 w-6 bg-blue-bright transition-all duration-300 ${
-              open ? "top-1/2 -translate-y-1/2 rotate-45" : "top-0"
-            }`}
-          />
-          <span
-            className={`absolute left-0 top-1/2 block h-0.5 w-6 -translate-y-1/2 bg-blue-bright transition-opacity duration-300 ${
-              open ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`absolute left-0 block h-0.5 w-6 bg-blue-bright transition-all duration-300 ${
-              open ? "top-1/2 -translate-y-1/2 -rotate-45" : "bottom-0"
-            }`}
-          />
-        </span>
-      </button>
-
-      <div
-        inert={!open}
-        className={`fixed inset-0 z-40 transition-opacity duration-300 ${
-          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
+    <div className="fixed right-8 bottom-6 z-40 hidden flex-col items-end gap-3 text-white lg:flex">
+      <div className="text-right">
+        <div className="font-display skew-x-[-8deg] text-4xl [text-shadow:3px_3px_0_rgba(3,18,110,0.5)]">
+          {active.hint}
+        </div>
+        <div className="mt-1 flex items-center justify-end gap-2">
+          <span className="text-xs font-bold tracking-[0.2em]">Section</span>
+          <span className="h-[2px] w-24 bg-white/80" />
+        </div>
+      </div>
+      <div className="font-display flex items-center gap-6 text-2xl">
         <button
           type="button"
-          aria-label="Close menu"
-          tabIndex={-1}
-          onClick={() => setOpen(false)}
-          className="absolute inset-0 h-full w-full cursor-default bg-blue-deep/92 backdrop-blur-md"
-        />
-        <nav className="relative flex h-full flex-col justify-center gap-2 pl-8">
-          {sections.map((section, index) => {
-            const isActive = active === section.id;
-            return (
-              <a
-                key={section.id}
-                href={`#${section.id}`}
-                onClick={() => setOpen(false)}
-                className={`menu-item group relative flex items-center gap-3 transition-all duration-300 ${
-                  open ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
-                }`}
-                style={{
-                  paddingLeft: `${index * 0.6}rem`,
-                  transitionDelay: open ? `${index * 55 + 90}ms` : "0ms",
-                }}
-              >
-                <span className="font-mono text-xs not-italic text-blue-pale/60">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="relative px-3 py-1">
-                  {isActive && (
-                    <span className="slant absolute inset-0 -left-1 bg-accent-red shadow-[0_0_24px_rgba(255,34,71,0.55)]" />
-                  )}
-                  <span
-                    className={`relative text-3xl sm:text-4xl ${
-                      isActive ? "text-white" : "text-blue-pale/70"
-                    }`}
-                  >
-                    {section.label}
-                  </span>
-                </span>
-              </a>
-            );
-          })}
-          <div
-            className={`mt-10 flex gap-3 pl-3 transition-all duration-300 ${
-              open ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0"
-            }`}
-            style={{ transitionDelay: open ? "400ms" : "0ms" }}
-          >
-            {socials.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={social.label}
-                className="grid size-10 place-items-center rounded-full border border-white/15 bg-blue-deep/50 text-blue-bright transition-colors hover:border-blue-bright hover:text-white"
-              >
-                <SocialIcon label={social.label} className="size-5" />
-              </a>
-            ))}
-          </div>
-        </nav>
-      </div>
-    </div>
-  );
-}
-
-function SideRail() {
-  return (
-    <aside className="pointer-events-none fixed right-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-4 xl:flex">
-      {socials.map((social) => (
-        <a
-          key={social.label}
-          href={social.href}
-          target="_blank"
-          rel="noreferrer"
-          className="pointer-events-auto group flex w-40 items-center gap-3 rounded-md border border-white/10 bg-blue-deep/50 px-3 py-2 backdrop-blur-sm transition duration-200 hover:-translate-x-1 hover:border-blue-bright"
+          onClick={() => scrollToSection(next.id)}
+          className="group flex cursor-pointer items-center gap-2"
         >
-          <span className="grid size-7 place-items-center rounded-full bg-blue-bright/20 text-blue-bright transition-transform duration-200 group-hover:scale-110">
-            <SocialIcon label={social.label} className="size-4" />
-          </span>
-          <span className="flex-1">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-blue-pale group-hover:text-white">
-              {social.label}
-            </span>
-            <span
-              className="statbar mt-1 block h-1 rounded-full"
-              style={{ "--fill": `${social.fill}%` }}
-            />
-          </span>
-        </a>
-      ))}
-    </aside>
-  );
-}
-
-function CommandBar({ active }) {
-  const current = sections.find((section) => section.id === active);
-  return (
-    <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between border-t border-white/10 bg-blue-deep/80 px-4 py-2 text-xs backdrop-blur-md sm:px-8">
-      <span className="menu-item text-blue-pale">
-        <span className="not-italic text-blue-bright">/</span>{" "}
-        {current?.label ?? "Home"}
-      </span>
-      <span className="hidden items-center gap-5 font-semibold text-blue-pale/80 sm:flex">
-        <span className="flex items-center gap-1.5">
-          <kbd className="grid size-4 place-items-center rounded-full bg-blue-bright text-[10px] text-blue-deep">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
             A
-          </kbd>
-          Select
-        </span>
-        <span className="flex items-center gap-1.5">
-          <kbd className="grid size-4 place-items-center rounded-full bg-accent-red text-[10px] text-white">
-            B
-          </kbd>
-          <a href="#hero">Top</a>
-        </span>
-      </span>
-    </div>
-  );
-}
-
-function LinkIcon({ href }) {
-  const isYouTube = href.includes("youtube.com") || href.includes("youtu.be");
-  const isGitHub = href.includes("github.com");
-
-  if (isYouTube) {
-    return (
-      <svg className="size-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M23.5 6.2a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.51A3.02 3.02 0 0 0 .5 6.2C0 8.09 0 12 0 12s0 3.91.5 5.8a3.02 3.02 0 0 0 2.12 2.14c1.88.51 9.38.51 9.38.51s7.5 0 9.38-.51a3.02 3.02 0 0 0 2.12-2.14C24 15.91 24 12 24 12s0-3.91-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z" />
-      </svg>
-    );
-  }
-
-  if (isGitHub) {
-    return (
-      <svg className="size-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.21 11.16.6.11.82-.25.82-.56 0-.28-.01-1.02-.02-2-3.34.71-4.04-1.58-4.04-1.58-.55-1.37-1.33-1.74-1.33-1.74-1.09-.73.08-.71.08-.71 1.2.08 1.83 1.21 1.83 1.21 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.57-2.67-.3-5.47-1.31-5.47-5.83 0-1.29.47-2.34 1.24-3.17-.12-.3-.54-1.52.12-3.16 0 0 1.01-.32 3.3 1.21.96-.26 1.98-.39 3-.4 1.02.01 2.04.14 3 .4 2.29-1.53 3.3-1.21 3.3-1.21.66 1.64.24 2.86.12 3.16.77.83 1.24 1.88 1.24 3.17 0 4.53-2.81 5.53-5.49 5.82.43.36.81 1.08.81 2.18 0 1.58-.01 2.85-.01 3.24 0 .31.22.68.83.56C20.56 21.88 24 17.48 24 12.29 24 5.78 18.63.5 12 .5z" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      className="size-3.5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-      <polyline points="15 3 21 3 21 9" />
-      <line x1="10" y1="14" x2="21" y2="3" />
-    </svg>
-  );
-}
-
-function WaterCaustics() {
-  return (
-    <svg
-      className="water-caustics"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <filter
-          id="caustics"
-          x="-30%"
-          y="-30%"
-          width="160%"
-          height="160%"
-          colorInterpolationFilters="sRGB"
-        >
-          {/* Large, low-frequency cells read as pool caustics rather than
-              fine static. baseFrequency only undulates slightly and slowly. */}
-          <feTurbulence
-            type="turbulence"
-            baseFrequency="0.006 0.009"
-            numOctaves="2"
-            seed="11"
-            result="noise"
-          >
-            <animate
-              attributeName="baseFrequency"
-              dur="40s"
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyTimes="0;0.5;1"
-              keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
-              values="0.006 0.009;0.0075 0.0075;0.006 0.009"
-            />
-          </feTurbulence>
-          {/* alpha = 1.1*noise - 0.55 keeps only the bright peaks, turning the
-              cloud into thin caustic veins; RGB tints them blue-white. */}
-          <feColorMatrix
-            in="noise"
-            type="matrix"
-            values="0 0 0 0 0.55  0 0 0 0 0.82  0 0 0 0 1  0 0 0 1.1 -0.55"
-          />
-        </filter>
-      </defs>
-      <rect x="-15%" y="-15%" width="130%" height="130%" filter="url(#caustics)">
-        <animateTransform
-          attributeName="transform"
-          type="translate"
-          dur="26s"
-          repeatCount="indefinite"
-          calcMode="spline"
-          keyTimes="0;0.5;1"
-          keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
-          values="0 0; 6 38; 0 0"
-        />
-      </rect>
-    </svg>
-  );
-}
-
-function SocialIcon({ label, className = "size-5" }) {
-  if (label === "LinkedIn") {
-    return (
-      <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.74v20.52C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z" />
-      </svg>
-    );
-  }
-
-  if (label === "Email") {
-    return (
-      <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M2 5.5C2 4.67 2.67 4 3.5 4h17c.83 0 1.5.67 1.5 1.5v13c0 .83-.67 1.5-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13Zm2.06.5 7.94 5.29L19.94 6H4.06ZM20 7.87l-7.44 4.96a1 1 0 0 1-1.12 0L4 7.87V18h16V7.87Z" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.21 11.16.6.11.82-.25.82-.56 0-.28-.01-1.02-.02-2-3.34.71-4.04-1.58-4.04-1.58-.55-1.37-1.33-1.74-1.33-1.74-1.09-.73.08-.71.08-.71 1.2.08 1.83 1.21 1.83 1.21 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.57-2.67-.3-5.47-1.31-5.47-5.83 0-1.29.47-2.34 1.24-3.17-.12-.3-.54-1.52.12-3.16 0 0 1.01-.32 3.3 1.21.96-.26 1.98-.39 3-.4 1.02.01 2.04.14 3 .4 2.29-1.53 3.3-1.21 3.3-1.21.66 1.64.24 2.86.12 3.16.77.83 1.24 1.88 1.24 3.17 0 4.53-2.81 5.53-5.49 5.82.43.36.81 1.08.81 2.18 0 1.58-.01 2.85-.01 3.24 0 .31.22.68.83.56C20.56 21.88 24 17.48 24 12.29 24 5.78 18.63.5 12 .5z" />
-    </svg>
-  );
-}
-
-function SectionHeading({ index, children }) {
-  return (
-    <div className="mb-8 flex items-baseline gap-4">
-      <span className="font-mono text-sm text-blue-bright">{index}</span>
-      <h2 className="display text-4xl text-white sm:text-6xl">
-        {children}
-        <span className="text-accent-red">.</span>
-      </h2>
-    </div>
-  );
-}
-
-function ContactForm() {
-  const [sent, setSent] = useState(false);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const name = data.get("name");
-    const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-    const body = encodeURIComponent(
-      `${data.get("message")}\n\n— ${name}\n${data.get("email")}`
-    );
-    window.location.href = `mailto:jojo.31.liu@gmail.com?subject=${subject}&body=${body}`;
-    setSent(true);
-  }
-
-  if (sent) {
-    return (
-      <div className="rounded-lg border border-blue-bright/40 bg-blue-bright/10 p-8 text-center">
-        <p className="display text-2xl text-white">Your email is ready.</p>
-        <p className="mt-2 text-blue-pale">
-          I&apos;ve opened your mail app with the message drafted — just hit send
-          and I&apos;ll reply within a day.
-        </p>
+          </span>
+          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+            Next
+          </span>
+        </button>
         <button
-          onClick={() => setSent(false)}
-          className="mt-5 text-sm font-semibold text-blue-bright hover:text-white"
+          type="button"
+          onClick={() => scrollToSection("home")}
+          className="group flex cursor-pointer items-center gap-2"
         >
-          Write another
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+            B
+          </span>
+          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+            Top
+          </span>
         </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
+function SkillBar({ name, level }) {
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <input
-          required
-          name="name"
-          placeholder="Your name"
-          className="rounded-md border border-white/15 bg-blue-deep/50 px-4 py-3 text-white placeholder:text-blue-pale/50 outline-none transition focus:border-blue-bright"
-        />
-        <input
-          required
-          type="email"
-          name="email"
-          placeholder="Your email"
-          className="rounded-md border border-white/15 bg-blue-deep/50 px-4 py-3 text-white placeholder:text-blue-pale/50 outline-none transition focus:border-blue-bright"
-        />
+    <div className="flex items-center gap-4">
+      <span className="font-display w-20 skew-x-[-10deg] text-base text-[#0a2ec4] md:w-32 md:text-xl">
+        {name}
+      </span>
+      <div className="h-5 flex-1 -skew-x-12 bg-[#08214f] p-1 shadow-[3px_3px_0_rgba(3,18,110,0.25)]">
+        <div className="flex h-full flex-col justify-between">
+          <div
+            className="h-[55%] bg-[#2de1ff]"
+            style={{ width: `${level * 10}%` }}
+          />
+          <div
+            className="h-[25%] bg-[#ffd400]"
+            style={{ width: `${Math.max(level - 2, 1) * 10}%` }}
+          />
+        </div>
       </div>
-      <textarea
-        required
-        name="message"
-        rows={4}
-        placeholder="Tell me about your project"
-        className="rounded-md border border-white/15 bg-blue-deep/50 px-4 py-3 text-white placeholder:text-blue-pale/50 outline-none transition focus:border-blue-bright"
-      />
-      <button
-        type="submit"
-        className="slant self-start bg-accent-red px-7 py-3 shadow-[0_0_24px_rgba(255,34,71,0.5)] transition duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-95"
-      >
-        <span className="unslant menu-item block text-lg text-white">
-          Send Message
-        </span>
-      </button>
-    </form>
+      <span className="font-display w-10 text-right text-base text-[#0a2ec4] md:w-12 md:text-xl">
+        Lv{level}
+      </span>
+    </div>
+  );
+}
+
+function TechChip({ children }) {
+  return (
+    <span className="font-display -skew-x-12 bg-[#0a2ec4] px-3 py-0.5 text-sm text-[#9ff0ff]">
+      <span className="block skew-x-12">{children}</span>
+    </span>
   );
 }
 
 export default function Home() {
-  const active = useActiveSection();
-  useBackgroundParallax();
+  const [activeId, setActiveId] = useState("home");
+
+  // Scroll spy: the section closest to the viewport center is active.
+  useEffect(() => {
+    function updateActive() {
+      const centerY = window.innerHeight / 2;
+      let bestId = SECTIONS[0].id;
+      let bestDistance = Infinity;
+      for (const section of SECTIONS) {
+        const element = document.getElementById(section.id);
+        if (!element) continue;
+        const rect = element.getBoundingClientRect();
+        const distance =
+          rect.top <= centerY && rect.bottom >= centerY
+            ? 0
+            : Math.min(
+                Math.abs(rect.top - centerY),
+                Math.abs(rect.bottom - centerY)
+              );
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestId = section.id;
+        }
+      }
+      setActiveId(bestId);
+    }
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, []);
+
+  // Desktop gamepad-style keys: A jumps to the next section, B back to top.
+  useEffect(() => {
+    function handleKey(event) {
+      if (!window.matchMedia("(min-width: 1024px)").matches) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const key = event.key.toLowerCase();
+      if (key === "a") {
+        const index = SECTIONS.findIndex(
+          (section) => section.id === activeId
+        );
+        scrollToSection(SECTIONS[(index + 1) % SECTIONS.length].id);
+      } else if (key === "b") {
+        scrollToSection("home");
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [activeId]);
+
+  const activeLabel =
+    SECTIONS.find((section) => section.id === activeId)?.label ?? "HOME";
 
   return (
-    <>
-      <div className="water-glow" aria-hidden="true" />
-      <WaterCaustics />
-      <SideNav active={active} />
-      <MobileMenu active={active} />
-      <SideRail />
-      <CommandBar active={active} />
+    <div className="relative">
+      <Background activeLabel={activeLabel} />
+      <WalletBox />
+      <SocialChips />
+      <MenuNav activeId={activeId} />
+      <MobileMenu />
+      <CommandHint activeId={activeId} />
 
-      <main className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 lg:pl-48 xl:pr-36">
+      <main className="relative z-10 mx-auto max-w-screen-2xl px-5 lg:px-0">
+        {/* HERO — left side belongs to the menu; intro sits on the right */}
         <section
-          id="hero"
-          className="flex min-h-screen flex-col justify-center py-24 items-center text-center sm:items-start sm:text-left"
+          id="home"
+          className="flex min-h-screen items-center lg:justify-end"
         >
-          <p
-            className="hero-item menu-item mb-4 text-sm text-blue-bright"
-            style={{ animationDelay: "100ms" }}
-          >
-            <span className="slant inline-block bg-blue-bright/15 px-2 py-0.5">
-              <span className="unslant inline-block">Portfolio</span>
-            </span>
-          </p>
-          <h1 className="display text-5xl text-white sm:text-7xl lg:text-8xl">
-            <span className="name-line" style={{ animationDelay: "240ms" }}>
-              Josaphat
-            </span>
-            <br />
-            <span className="name-line" style={{ animationDelay: "380ms" }}>
-              Cornelius
-              <span className="text-accent-red">/</span>
-            </span>
-          </h1>
-          <p
-            className="hero-item mt-6 max-w-xl text-lg text-blue-pale sm:text-xl"
-            style={{ animationDelay: "540ms" }}
-          >
-            Full Stack Developer in Jakarta building seamless, user-friendly web,
-            Android, and game experiences that feel alive.
-          </p>
-          <div
-            className="hero-item mt-10 flex flex-wrap justify-center gap-4 sm:justify-start"
-            style={{ animationDelay: "660ms" }}
-          >
-            <a
-              href="#projects"
-              className="slant bg-accent-red px-7 py-3 shadow-[0_0_24px_rgba(255,34,71,0.5)] transition-transform duration-200 hover:-translate-y-0.5 hover:brightness-110 active:translate-y-0 active:scale-95"
+          <div className="w-full lg:mr-[6%] lg:w-[42%]">
+            <div className="animate-float">
+              <p className="font-display skew-x-[-10deg] text-xl text-[#2de1ff] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)] md:text-2xl">
+                — {PROFILE.name}
+              </p>
+              <h1 className="font-display skew-x-[-10deg] text-6xl leading-[0.9] text-white [text-shadow:5px_5px_0_rgba(3,18,110,0.55)] md:text-8xl">
+                FULL
+                <br />
+                STACK
+              </h1>
+            </div>
+            <p className="mt-6 max-w-md text-base font-medium text-[#d6f6ff] [text-shadow:1px_1px_0_rgba(3,18,110,0.6)] md:mt-8 md:text-lg">
+              {PROFILE.tagline}
+            </p>
+            <button
+              type="button"
+              onClick={() => scrollToSection("about")}
+              className="font-display group mt-8 flex cursor-pointer items-center gap-3 text-xl text-white md:mt-10 md:text-2xl"
             >
-              <span className="unslant menu-item block text-lg text-white">
-                View Work
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-lg transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+                A
               </span>
-            </a>
-            <a
-              href="#contact"
-              className="slant border border-blue-bright/60 px-7 py-3 transition duration-200 hover:-translate-y-0.5 hover:bg-blue-bright/10 active:translate-y-0 active:scale-95"
-            >
-              <span className="unslant menu-item block text-lg text-blue-bright">
-                Contact
+              <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+                Press Start
               </span>
-            </a>
+            </button>
           </div>
         </section>
 
-        <section id="about" className="scroll-mt-20 py-24">
-          <Reveal>
-            <SectionHeading index="01">About</SectionHeading>
-          </Reveal>
-          <Reveal
-            delay={120}
-            className="grid gap-10 md:grid-cols-[1.4fr_1fr]"
-          >
-            <div className="space-y-4 text-lg leading-relaxed text-blue-pale">
-              <p>
-                I&apos;m a full-stack developer who loves turning ideas into
-                things people actually enjoy using. My work spans full-stack web,
-                Android, and game development, but the throughline never changes:
-                building seamless, user-friendly applications and digital
-                experiences that feel alive. I care deeply about clean code,
-                sharp UX, and shipping work that holds up in the real world.
-              </p>
-              <p>
-                Outside of pure engineering, I&apos;m a maker at heart — I edit,
-                shoot photography, and produce videography, so the visuals always
-                match the products I build. That blend earned 2nd place in the
-                Politeknik Tempo University English Speech Contest (2023) and 3rd
-                place in the FLS2N Short Movie Contest.
-              </p>
-            </div>
-            <div>
-              <p className="menu-item mb-3 text-sm text-blue-bright">Toolkit</p>
-              <ul className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <li
-                    key={skill}
-                    className="cursor-default rounded-full border border-white/15 bg-blue-deep/40 px-3 py-1 text-sm text-blue-pale transition duration-200 hover:-translate-y-0.5 hover:border-blue-bright hover:bg-blue-bright/10 hover:text-white"
-                  >
-                    {skill}
-                  </li>
+        {/* ABOUT */}
+        <section
+          id="about"
+          className="flex min-h-screen items-center py-16 md:py-24 lg:justify-end"
+        >
+          <div className="w-full lg:mr-[4%] lg:w-[44%]">
+            <SectionTitle>ABOUT</SectionTitle>
+            <Card>
+              {ABOUT_PARAGRAPHS.map((paragraph) => (
+                <p
+                  key={paragraph.slice(0, 24)}
+                  className="text-base leading-relaxed not-first:mt-4 md:text-lg"
+                >
+                  {paragraph}
+                </p>
+              ))}
+              <div className="mt-8 flex flex-col gap-4">
+                {SKILL_GAUGES.map((skill) => (
+                  <SkillBar key={skill.name} {...skill} />
                 ))}
-              </ul>
-            </div>
-          </Reveal>
+              </div>
+              <p className="font-display mt-8 skew-x-[-10deg] text-xl text-[#0a2ec4]">
+                TOOLKIT
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {TOOLKIT.map((tool) => (
+                  <TechChip key={tool}>{tool}</TechChip>
+                ))}
+              </div>
+            </Card>
+          </div>
         </section>
 
-        <section id="projects" className="scroll-mt-20 py-24">
-          <Reveal>
-            <SectionHeading index="02">Projects</SectionHeading>
-          </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {projects.map((project, index) => (
-              <Reveal key={project.name} delay={index * 70} className="h-full">
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-white/10 bg-blue-deep/40 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-bright hover:bg-blue-deep/60 hover:shadow-[0_18px_50px_-20px_rgba(94,155,255,0.65)]">
-                  <span className="slant absolute left-4 top-0 h-1 w-12 origin-left scale-x-0 bg-accent-red transition-transform duration-300 group-hover:scale-x-100" />
-                  <div className="mb-3 flex items-center justify-between">
-                    <h3 className="display text-2xl text-white transition-colors duration-200 group-hover:text-blue-bright">
-                      {project.name}
+        {/* PROJECTS */}
+        <section
+          id="projects"
+          className="flex min-h-screen items-center py-16 md:py-24 lg:justify-end"
+        >
+          <div className="w-full lg:mr-[4%] lg:w-[46%]">
+            <SectionTitle>PROJECTS</SectionTitle>
+            <div className="flex flex-col gap-8">
+              {PROJECTS.map((project, index) => (
+                <Card
+                  key={project.title}
+                  className={index % 2 ? "lg:ml-12" : ""}
+                >
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="font-display skew-x-[-10deg] text-2xl text-[#0a2ec4] md:text-3xl">
+                      {project.title}
                     </h3>
-                    <span className="menu-item text-xs text-accent-red">
-                      {project.tag}
+                    <span
+                      className={`font-display -skew-x-12 px-3 py-0.5 text-sm ${
+                        project.tag === "Completed"
+                          ? "bg-[#2de1ff] text-[#03124d]"
+                          : "bg-[#ffd400] text-[#03124d]"
+                      }`}
+                    >
+                      <span className="block skew-x-12">{project.tag}</span>
                     </span>
                   </div>
-                  <p className="flex-1 text-blue-pale">{project.blurb}</p>
-                  <ul className="mt-4 flex flex-wrap gap-2">
+                  <p className="mt-3 leading-relaxed">{project.description}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
                     {project.stack.map((tech) => (
-                      <li
-                        key={tech}
-                        className="font-mono text-xs text-blue-bright"
-                      >
-                        #{tech}
-                      </li>
+                      <TechChip key={tech}>{tech}</TechChip>
                     ))}
-                  </ul>
-                  <div className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-5">
                     {project.links.map((link) => (
                       <a
-                        key={link.href}
+                        key={link.label}
                         href={link.href}
                         target="_blank"
                         rel="noreferrer"
-                        className="slant border border-blue-bright/40 px-3 py-1 transition duration-200 hover:-translate-y-0.5 hover:border-blue-bright hover:bg-blue-bright/15"
+                        className="font-display flex items-center gap-2 text-lg text-[#e60012] hover:underline"
                       >
-                        <span className="unslant menu-item flex items-center gap-1.5 text-xs text-blue-bright">
-                          <LinkIcon href={link.href} />
-                          {link.label}
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
+                          A
                         </span>
+                        {link.label}
                       </a>
                     ))}
                   </div>
-                </article>
-              </Reveal>
-            ))}
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section id="experience" className="scroll-mt-20 py-24">
-          <Reveal>
-            <SectionHeading index="03">Experience</SectionHeading>
-          </Reveal>
-          <ol className="relative border-l border-white/15 pl-6">
-            {experience.map((job, index) => (
-              <li key={job.company} className="group mb-10 last:mb-0">
-                <span className="slant absolute -left-[7px] mt-1.5 size-3 bg-accent-red transition-transform duration-300 group-hover:scale-150 group-hover:shadow-[0_0_18px_rgba(255,34,71,0.8)]" />
-                <Reveal delay={index * 90}>
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <h3 className="display text-2xl text-white transition-colors duration-200 group-hover:text-blue-bright">
-                      {job.role}
-                    </h3>
-                    <span className="font-mono text-sm text-blue-bright">
-                      {job.period}
-                    </span>
+        {/* EXPERIENCE */}
+        <section
+          id="experience"
+          className="flex min-h-screen items-center py-16 md:py-24 lg:justify-end"
+        >
+          <div className="w-full lg:mr-[4%] lg:w-[46%]">
+            <SectionTitle>EXPERIENCE</SectionTitle>
+            <div className="flex flex-col gap-8">
+              {EXPERIENCE.map((job, index) => (
+                <Card key={job.period} className={index % 2 ? "lg:ml-12" : ""}>
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start">
+                    <div className="font-display shrink-0 -skew-x-6 bg-[#e60012] px-4 py-2 text-xl text-white shadow-[4px_4px_0_rgba(120,0,10,0.3)]">
+                      <span className="block skew-x-6">{job.period}</span>
+                    </div>
+                    <div>
+                      <h3 className="font-display skew-x-[-8deg] text-xl text-[#0a2ec4] md:text-2xl">
+                        {job.role}
+                      </h3>
+                      <p className="font-bold text-[#1f8de0]">{job.company}</p>
+                      <p className="mt-2 leading-relaxed">{job.detail}</p>
+                    </div>
                   </div>
-                  <p className="menu-item text-sm text-blue-pale">
-                    {job.company}
-                  </p>
-                  <p className="mt-2 max-w-2xl text-blue-pale">{job.detail}</p>
-                </Reveal>
-              </li>
-            ))}
-          </ol>
+                </Card>
+              ))}
+            </div>
+          </div>
         </section>
 
-        <section id="contact" className="scroll-mt-20 py-24">
-          <Reveal>
-            <SectionHeading index="04">Contact</SectionHeading>
-          </Reveal>
-          <Reveal delay={100} as="p" className="mb-8 max-w-xl text-lg text-blue-pale">
-            Have a project in mind or just want to say hello? Drop a line and
-            let&apos;s talk.
-          </Reveal>
-          <Reveal delay={200}>
-            <ContactForm />
-          </Reveal>
+        {/* CONTACT */}
+        <section
+          id="contact"
+          className="flex min-h-screen items-center py-16 md:py-24 lg:justify-end"
+        >
+          <div className="w-full lg:mr-[4%] lg:w-[44%]">
+            <SectionTitle>CONTACT</SectionTitle>
+            <Card>
+              <p className="font-display skew-x-[-8deg] text-2xl text-[#0a2ec4] md:text-3xl">
+                Initiate Social Link?
+              </p>
+              <p className="mt-3 text-base leading-relaxed md:text-lg">
+                {CONTACT_INTRO}
+              </p>
+              <a
+                href={`mailto:${PROFILE.email}`}
+                className="font-display mt-6 inline-block max-w-full -skew-x-2 bg-[#e60012] px-4 py-2.5 text-base break-all text-white shadow-[6px_6px_0_rgba(120,0,10,0.3)] transition-transform hover:-translate-y-1 md:-skew-x-6 md:px-8 md:py-3 md:text-2xl"
+              >
+                <span className="block skew-x-6">{PROFILE.email}</span>
+              </a>
+              <div className="mt-8 flex gap-4">
+                {PROFILE.socials.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-display -skew-x-6 border-2 border-[#0a2ec4] px-5 py-2 text-lg text-[#0a2ec4] transition-colors hover:bg-[#0a2ec4] hover:text-white"
+                  >
+                    <span className="block skew-x-6">{social.name}</span>
+                  </a>
+                ))}
+              </div>
+            </Card>
+            <p className="mt-10 text-center text-sm font-bold tracking-[0.3em] text-[#9ff0ff] [text-shadow:1px_1px_0_rgba(3,18,110,0.6)] lg:text-right">
+              Ⓐ CONFIRM&nbsp;&nbsp;&nbsp;Ⓑ CLOSE
+            </p>
+          </div>
         </section>
       </main>
-    </>
+    </div>
   );
 }

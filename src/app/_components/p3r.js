@@ -149,14 +149,17 @@ export function Background({ activeLabel }) {
 
 export function WalletBox() {
   return (
-    <div className="fixed top-4 left-4 z-40 border-2 border-black bg-white px-3 py-1.5 text-black shadow-[4px_4px_0_rgba(0,0,0,0.25)] lg:top-6 lg:left-6 lg:border-[3px] lg:px-5 lg:py-2 lg:shadow-[6px_6px_0_rgba(0,0,0,0.25)]">
+    <Link
+      href="/"
+      className="fixed top-4 left-4 z-40 border-2 border-black bg-white px-3 py-1.5 text-black shadow-[4px_4px_0_rgba(0,0,0,0.25)] transition-transform hover:-translate-y-0.5 lg:top-6 lg:left-6 lg:border-[3px] lg:px-5 lg:py-2 lg:shadow-[6px_6px_0_rgba(0,0,0,0.25)]"
+    >
       <div className="font-display text-base tracking-wide lg:text-2xl">
         ¥ {PROFILE.name}
       </div>
       <div className="text-[9px] font-bold tracking-widest lowercase lg:text-[11px]">
         {PROFILE.role.toLowerCase()}
       </div>
-    </div>
+    </Link>
   );
 }
 

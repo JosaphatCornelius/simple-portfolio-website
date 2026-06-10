@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }) {
         </Link>
       </div>
 
-      <main className="relative z-10 mx-auto max-w-screen-2xl px-5 py-16 md:py-20 lg:px-0">
+      <main className="relative z-10 mx-auto max-w-screen-2xl px-5 pt-28 pb-16 md:py-20 lg:px-0">
         <div className="lg:ml-auto lg:w-[56%] lg:pr-[4%]">
           <Link
             href="/articles"

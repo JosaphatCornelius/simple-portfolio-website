@@ -68,7 +68,7 @@ function MenuLabel({ isActive, color, children }) {
 
 function MenuNav({ activeId }) {
   return (
-    <nav className="fly fly-menu fixed top-[30%] left-[27%] z-30 hidden -translate-y-1/2 lg:block">
+    <nav className="fly fly-menu fixed top-1/2 left-[27%] z-30 hidden -translate-y-1/2 lg:block">
       <ul className="flex flex-col gap-1">
         {MENU_ITEMS.map((item, index) => {
           const isActive = item.id === activeId;

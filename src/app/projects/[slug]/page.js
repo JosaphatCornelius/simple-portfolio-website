@@ -6,6 +6,7 @@ import {
   Card,
   MobileMenu,
   SocialChips,
+  TechChip,
   WalletBox,
 } from "../../_components/p3r";
 
@@ -82,12 +83,7 @@ export default async function ProjectPage({ params }) {
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {project.stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="font-display -skew-x-12 bg-[#0a2ec4] px-3 py-0.5 text-sm text-[#9ff0ff]"
-                  >
-                    <span className="block skew-x-12">{tech}</span>
-                  </span>
+                  <TechChip key={tech}>{tech}</TechChip>
                 ))}
               </div>
             </Card>

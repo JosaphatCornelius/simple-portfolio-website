@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Card } from "./p3r";
+import { Card, TechChip } from "./p3r";
 
 export function ProjectCard({ project }) {
   const [expanded, setExpanded] = useState(false);
@@ -26,12 +26,7 @@ export function ProjectCard({ project }) {
       <p className="mt-3 leading-relaxed">{project.description}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         {project.stack.map((tech) => (
-          <span
-            key={tech}
-            className="font-display -skew-x-12 bg-[#0a2ec4] px-3 py-0.5 text-sm text-[#9ff0ff]"
-          >
-            <span className="block skew-x-12">{tech}</span>
-          </span>
+          <TechChip key={tech}>{tech}</TechChip>
         ))}
       </div>
 

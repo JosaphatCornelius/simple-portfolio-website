@@ -22,6 +22,7 @@ import {
   MobileMenu,
   SectionTitle,
   SocialChips,
+  TechChip,
   WalletBox,
 } from "./_components/p3r";
 
@@ -174,14 +175,6 @@ function SkillBar({ name, level }) {
         Lv{level}
       </span>
     </div>
-  );
-}
-
-function TechChip({ children }) {
-  return (
-    <span className="font-display -skew-x-12 bg-[#0a2ec4] px-3 py-0.5 text-sm text-[#9ff0ff]">
-      <span className="block skew-x-12">{children}</span>
-    </span>
   );
 }
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ContactCard } from "./_components/contact-card";
 import { Reveal } from "./_components/reveal";
 import {
   ABOUT_PARAGRAPHS,
@@ -448,6 +449,7 @@ export default function Home() {
                 >
                   <span className="block skew-x-6">{PROFILE.email}</span>
                 </a>
+                <ContactCard />
                 <div className="mt-8 flex gap-4">
                   {PROFILE.socials.map((social) => (
                     <a

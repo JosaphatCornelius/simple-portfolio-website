@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatArticleDate, getAllArticles } from "../_lib/articles";
 import { Reveal } from "../_components/reveal";
+import { SideMenu } from "../_components/side-menu";
 import {
   Background,
   Card,
@@ -24,6 +25,13 @@ export default async function ArticlesPage() {
       <Background activeLabel="POSTS" />
       <WalletBox />
       <SocialChips />
+      <SideMenu
+        items={[
+          { label: "HOME", href: "/" },
+          { label: "ARTICLES", href: "/articles" },
+        ]}
+        activeLabel="ARTICLES"
+      />
       <MobileMenu />
 
       <div className="fly fly-back fixed right-8 bottom-6 z-40 hidden lg:block">

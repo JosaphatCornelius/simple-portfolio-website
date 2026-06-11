@@ -21,6 +21,13 @@ export async function generateMetadata({ params }) {
   return {
     title: `${metadata.title} — Josaphat Cornelius`,
     description: metadata.summary,
+    openGraph: {
+      type: "article",
+      publishedTime: metadata.date,
+      url: `/articles/${slug}`,
+      title: metadata.title,
+      description: metadata.summary,
+    },
   };
 }
 

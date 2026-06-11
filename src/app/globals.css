@@ -30,6 +30,50 @@ body {
   overflow-x: hidden;
 }
 
+/* highlight.js token colors tuned to the P3R dark code box in
+   mdx-components.js (navy #03124d background, #9ff0ff base text). */
+.hljs-comment,
+.hljs-quote {
+  color: #6f8bd6;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-built_in {
+  color: #2de1ff;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-meta {
+  color: #ffd400;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-tag {
+  color: #ff6ea8;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params {
+  color: #cfe6ff;
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-deletion {
+  color: #ff9e64;
+}
+
 @keyframes caustic-drift {
   0% {
     transform: translate(0, 0) scale(1);

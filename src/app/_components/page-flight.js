@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { playSound } from "./sound";
 
 // Exit animation (260ms) plus the longest staggered exit delay (~140ms).
 const EXIT_TOTAL_MS = 420;
@@ -47,6 +48,7 @@ export function PageFlight({ children }) {
       }
       const departure = { destination };
       departureRef.current = departure;
+      playSound("whoosh");
       setLeaving(true);
       setTimeout(() => {
         if (departureRef.current === departure) {

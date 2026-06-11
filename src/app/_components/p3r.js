@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import { PROFILE } from "./data";
 
 export const MENU_COLORS = [
-  "#c4f5ff",
-  "#8eeaff",
-  "#5cd5fb",
-  "#39b4f1",
-  "#2b91e8",
-  "#2b76e0",
+  "var(--menu-1)",
+  "var(--menu-2)",
+  "var(--menu-3)",
+  "var(--menu-4)",
+  "var(--menu-5)",
+  "var(--menu-6)",
 ];
 export const MENU_OFFSETS = [0, 36, 6, 48, 20, 40];
 export const MENU_TILTS = [-2, -1.5, -2.5, -1, -2, -1.5];
@@ -57,7 +57,7 @@ export function Background({ activeLabel }) {
   return (
     <div aria-hidden className="fixed inset-0 -z-10 overflow-hidden">
       {/* Underwater gradient */}
-      <div className="absolute inset-0 bg-[linear-gradient(172deg,#2adcf9_0%,#13a5ef_25%,#0b55dc_55%,#0729ad_80%,#041672_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(172deg,var(--grad-a)_0%,var(--grad-b)_25%,var(--grad-c)_55%,var(--grad-d)_80%,var(--grad-e)_100%)]" />
 
       {/* Flowing caustic sheets: oversized tiled layers panning in opposing
           directions; pan distance matches the tile so the loop is seamless */}
@@ -106,7 +106,7 @@ export function Background({ activeLabel }) {
         viewBox="0 0 676 780"
         preserveAspectRatio="xMidYMax meet"
       >
-        <path d={stairPath} fill="rgba(3,18,110,0.55)" />
+        <path d={stairPath} fill="rgba(var(--ink),0.55)" />
         <path
           d={stairPath}
           fill="none"
@@ -118,13 +118,13 @@ export function Background({ activeLabel }) {
       {/* White wedge on the left with torn diagonal edge */}
       <div className="absolute inset-y-0 left-0 hidden w-[44%] lg:block">
         <div className="absolute inset-0 bg-white [clip-path:polygon(0_0,96%_0,30%_100%,0_100%)]" />
-        <div className="absolute inset-0 bg-[#bff1ff] opacity-70 [clip-path:polygon(96%_0,100%_0,34%_100%,30%_100%)]" />
+        <div className="absolute inset-0 bg-[var(--paper-tint)] opacity-70 [clip-path:polygon(96%_0,100%_0,34%_100%,30%_100%)]" />
 
         {/* Scattered shards, like the menu's confetti fragments */}
-        <div className="absolute top-[16%] left-[52%] h-5 w-3 -rotate-[24deg] bg-[#ff2d78]" />
-        <div className="absolute top-[34%] left-[60%] h-3 w-3 rotate-[40deg] bg-[#2d50ff]" />
-        <div className="absolute top-[58%] left-[34%] h-6 w-2 -rotate-[12deg] bg-[#ff2d78] opacity-80" />
-        <div className="absolute top-[72%] left-[18%] h-3 w-4 rotate-[18deg] bg-[#9be8ff]" />
+        <div className="absolute top-[16%] left-[52%] h-5 w-3 -rotate-[24deg] bg-[var(--accent-soft)]" />
+        <div className="absolute top-[34%] left-[60%] h-3 w-3 rotate-[40deg] bg-[var(--deep)]" />
+        <div className="absolute top-[58%] left-[34%] h-6 w-2 -rotate-[12deg] bg-[var(--accent-soft)] opacity-80" />
+        <div className="absolute top-[72%] left-[18%] h-3 w-4 rotate-[18deg] bg-[var(--glow)]" />
         <div className="absolute top-[24%] left-[27%] h-2 w-6 -rotate-[30deg] bg-black/80" />
 
         {/* Giant glitched letters spelling the active section; sized so the
@@ -148,7 +148,7 @@ export function Background({ activeLabel }) {
       </div>
 
       {/* Bottom vignette */}
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(to_top,rgba(2,8,60,0.6),transparent)]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(to_top,rgba(var(--ink),0.6),transparent)]" />
     </div>
   );
 }
@@ -181,13 +181,13 @@ export function SocialChips() {
           title={social.name}
           className="group flex flex-col items-end gap-1.5"
         >
-          <span className="font-display flex h-14 w-14 -skew-x-6 items-center justify-center bg-[linear-gradient(135deg,#9ff0ff,#1f8de0)] text-xl text-[#03124d] shadow-[4px_4px_0_rgba(0,10,80,0.45)] transition-transform group-hover:-translate-y-1">
+          <span className="font-display flex h-14 w-14 -skew-x-6 items-center justify-center bg-[linear-gradient(135deg,var(--glow),var(--cool-deep))] text-xl text-[var(--navy)] shadow-[4px_4px_0_rgba(0,10,80,0.45)] transition-transform group-hover:-translate-y-1">
             <span className="skew-x-6">{social.label}</span>
           </span>
-          <span className="h-3 w-20 -skew-x-12 bg-[#1450d8] p-0.5 shadow-[3px_3px_0_rgba(0,10,80,0.45)]">
+          <span className="h-3 w-20 -skew-x-12 bg-[var(--deep)] p-0.5 shadow-[3px_3px_0_rgba(0,10,80,0.45)]">
             <span className="flex h-full w-full flex-col justify-between">
-              <span className="h-[3px] w-3/4 bg-[#2de1ff]" />
-              <span className="h-[3px] w-1/2 bg-[#ffd400]" />
+              <span className="h-[3px] w-3/4 bg-[var(--cool)]" />
+              <span className="h-[3px] w-1/2 bg-[var(--warn)]" />
             </span>
           </span>
         </a>
@@ -220,7 +220,7 @@ export function MobileMenu() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-center overflow-hidden bg-[linear-gradient(160deg,rgba(13,60,200,0.97)_0%,rgba(4,22,110,0.98)_100%)] px-10">
+        <div className="fixed inset-0 z-50 flex flex-col justify-center overflow-hidden bg-[linear-gradient(160deg,var(--overlay-a)_0%,var(--overlay-b)_100%)] px-10">
           {/* Echo of the white wedge so the overlay reads as the game menu */}
           <div
             aria-hidden
@@ -241,7 +241,7 @@ export function MobileMenu() {
                   className="font-display block skew-x-[-12deg] text-4xl tracking-wide"
                   style={{
                     color: MENU_COLORS[index],
-                    textShadow: "3px 4px 0 rgba(3,18,110,0.45)",
+                    textShadow: "3px 4px 0 rgba(var(--ink),0.45)",
                   }}
                 >
                   {item.label}
@@ -257,7 +257,7 @@ export function MobileMenu() {
             <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base">
               B
             </span>
-            <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+            <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)]">
               Close
             </span>
           </button>
@@ -270,9 +270,9 @@ export function MobileMenu() {
 export function SectionTitle({ children }) {
   return (
     <div className="relative mb-8 inline-block md:mb-10">
-      <span className="absolute -inset-x-6 inset-y-0 -rotate-2 bg-[#ff6ea8] [clip-path:polygon(4%_18%,100%_0,94%_88%,0_100%)]" />
+      <span className="absolute -inset-x-6 inset-y-0 -rotate-2 bg-[var(--accent-slash)] [clip-path:polygon(4%_18%,100%_0,94%_88%,0_100%)]" />
       <span className="absolute -inset-x-5 inset-y-0 -rotate-2 bg-white [clip-path:polygon(3%_15%,100%_2%,95%_85%,0_98%)]" />
-      <h2 className="font-display relative skew-x-[-12deg] px-2 text-4xl text-[#e60012] [text-shadow:2px_2px_0_rgba(120,0,10,0.25)] md:text-6xl">
+      <h2 className="font-display relative skew-x-[-12deg] px-2 text-4xl text-[var(--accent)] [text-shadow:2px_2px_0_rgba(var(--ink-accent),0.25)] md:text-6xl">
         {children}
       </h2>
     </div>
@@ -284,7 +284,7 @@ export function Card({ children, className = "" }) {
   // gentler skew; content corners would otherwise cross the card edge.
   return (
     <div
-      className={`-skew-x-1 border-l-8 border-[#2de1ff] bg-white text-[#0c1430] shadow-[10px_10px_0_rgba(3,18,110,0.45)] md:-skew-x-3 ${className}`}
+      className={`-skew-x-1 border-l-8 border-[var(--cool)] bg-white text-[#0c1430] shadow-[10px_10px_0_rgba(var(--ink),0.45)] md:-skew-x-3 ${className}`}
     >
       <div className="skew-x-1 p-5 md:skew-x-3 md:p-8">{children}</div>
     </div>

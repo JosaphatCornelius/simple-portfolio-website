@@ -47,17 +47,17 @@ function MenuLabel({ isActive, color, children }) {
     <>
       {isActive && (
         <>
-          <span className="absolute -inset-x-8 inset-y-1 -rotate-2 bg-[#ff6ea8] [clip-path:polygon(4%_18%,100%_0,94%_88%,0_100%)]" />
+          <span className="absolute -inset-x-8 inset-y-1 -rotate-2 bg-[var(--accent-slash)] [clip-path:polygon(4%_18%,100%_0,94%_88%,0_100%)]" />
           <span className="absolute -inset-x-7 inset-y-1 -rotate-2 bg-white [clip-path:polygon(3%_15%,100%_2%,95%_85%,0_98%)]" />
         </>
       )}
       <span
         className="font-display relative block skew-x-[-12deg] text-5xl tracking-wide transition-all duration-150 group-hover:translate-x-2 xl:text-6xl"
         style={{
-          color: isActive ? "#e60012" : color,
+          color: isActive ? "var(--accent)" : color,
           textShadow: isActive
-            ? "3px 3px 0 rgba(120,0,10,0.35)"
-            : "3px 4px 0 rgba(3,18,110,0.45)",
+            ? "3px 3px 0 rgba(var(--ink-accent),0.35)"
+            : "3px 4px 0 rgba(var(--ink),0.45)",
         }}
       >
         {children}
@@ -113,7 +113,7 @@ function CommandHint({ activeId }) {
   return (
     <div className="fly fly-hint fixed right-8 bottom-6 z-40 hidden flex-col items-end gap-3 text-white lg:flex">
       <div className="text-right">
-        <div className="font-display skew-x-[-8deg] text-4xl [text-shadow:3px_3px_0_rgba(3,18,110,0.5)]">
+        <div className="font-display skew-x-[-8deg] text-4xl [text-shadow:3px_3px_0_rgba(var(--ink),0.5)]">
           {active.hint}
         </div>
         <div className="mt-1 flex items-center justify-end gap-2">
@@ -127,10 +127,10 @@ function CommandHint({ activeId }) {
           onClick={() => scrollToSection(next.id)}
           className="group flex cursor-pointer items-center gap-2"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[var(--deep)]">
             A
           </span>
-          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)]">
             Next
           </span>
         </button>
@@ -139,10 +139,10 @@ function CommandHint({ activeId }) {
           onClick={() => scrollToSection("home")}
           className="group flex cursor-pointer items-center gap-2"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[var(--deep)]">
             B
           </span>
-          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)]">
             Top
           </span>
         </button>
@@ -154,22 +154,22 @@ function CommandHint({ activeId }) {
 function SkillBar({ name, level }) {
   return (
     <div className="flex items-center gap-4">
-      <span className="font-display w-20 skew-x-[-10deg] text-base text-[#0a2ec4] md:w-32 md:text-xl">
+      <span className="font-display w-20 skew-x-[-10deg] text-base text-[var(--deep)] md:w-32 md:text-xl">
         {name}
       </span>
-      <div className="h-5 flex-1 -skew-x-12 bg-[#08214f] p-1 shadow-[3px_3px_0_rgba(3,18,110,0.25)]">
+      <div className="h-5 flex-1 -skew-x-12 bg-[var(--gauge-track)] p-1 shadow-[3px_3px_0_rgba(var(--ink),0.25)]">
         <div className="flex h-full flex-col justify-between">
           <div
-            className="h-[55%] bg-[#2de1ff]"
+            className="h-[55%] bg-[var(--cool)]"
             style={{ width: `${level * 10}%` }}
           />
           <div
-            className="h-[25%] bg-[#ffd400]"
+            className="h-[25%] bg-[var(--warn)]"
             style={{ width: `${Math.max(level - 2, 1) * 10}%` }}
           />
         </div>
       </div>
-      <span className="font-display w-10 text-right text-base text-[#0a2ec4] md:w-12 md:text-xl">
+      <span className="font-display w-10 text-right text-base text-[var(--deep)] md:w-12 md:text-xl">
         Lv{level}
       </span>
     </div>
@@ -178,7 +178,7 @@ function SkillBar({ name, level }) {
 
 function TechChip({ children }) {
   return (
-    <span className="font-display -skew-x-12 bg-[#0a2ec4] px-3 py-0.5 text-sm text-[#9ff0ff]">
+    <span className="font-display -skew-x-12 bg-[var(--deep)] px-3 py-0.5 text-sm text-[var(--glow)]">
       <span className="block skew-x-12">{children}</span>
     </span>
   );
@@ -258,16 +258,16 @@ export default function Home() {
           <div className="w-full lg:mr-[6%] lg:w-[42%]">
             <Reveal from="right">
               <div className="animate-float">
-                <p className="font-display skew-x-[-10deg] text-xl text-[#2de1ff] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)] md:text-2xl">
+                <p className="font-display skew-x-[-10deg] text-xl text-[var(--cool)] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)] md:text-2xl">
                   — {PROFILE.name}
                 </p>
-                <h1 className="font-display skew-x-[-10deg] text-6xl leading-[0.9] text-white [text-shadow:5px_5px_0_rgba(3,18,110,0.55)] md:text-8xl">
+                <h1 className="font-display skew-x-[-10deg] text-6xl leading-[0.9] text-white [text-shadow:5px_5px_0_rgba(var(--ink),0.55)] md:text-8xl">
                   FULL
                   <br />
                   STACK
                 </h1>
               </div>
-              <p className="mt-6 max-w-md text-base font-medium text-[#d6f6ff] [text-shadow:1px_1px_0_rgba(3,18,110,0.6)] md:mt-8 md:text-lg">
+              <p className="mt-6 max-w-md text-base font-medium text-[var(--glow)] [text-shadow:1px_1px_0_rgba(var(--ink),0.6)] md:mt-8 md:text-lg">
                 {PROFILE.tagline}
               </p>
               <button
@@ -275,10 +275,10 @@ export default function Home() {
                 onClick={() => scrollToSection("about")}
                 className="font-display group mt-8 flex cursor-pointer items-center gap-3 text-xl text-white md:mt-10 md:text-2xl"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-lg transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white text-lg transition-colors group-hover:bg-white group-hover:text-[var(--deep)]">
                   A
                 </span>
-                <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+                <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)]">
                   Press Start
                 </span>
               </button>
@@ -310,7 +310,7 @@ export default function Home() {
                     <SkillBar key={skill.name} {...skill} />
                   ))}
                 </div>
-                <p className="font-display mt-8 skew-x-[-10deg] text-xl text-[#0a2ec4]">
+                <p className="font-display mt-8 skew-x-[-10deg] text-xl text-[var(--deep)]">
                   TOOLKIT
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -342,14 +342,14 @@ export default function Home() {
                 >
                   <Card>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h3 className="font-display skew-x-[-10deg] text-2xl text-[#0a2ec4] md:text-3xl">
+                      <h3 className="font-display skew-x-[-10deg] text-2xl text-[var(--deep)] md:text-3xl">
                         {project.title}
                       </h3>
                       <span
                         className={`font-display -skew-x-12 px-3 py-0.5 text-sm ${
                           project.tag === "Completed"
-                            ? "bg-[#2de1ff] text-[#03124d]"
-                            : "bg-[#ffd400] text-[#03124d]"
+                            ? "bg-[var(--cool)] text-[var(--navy)]"
+                            : "bg-[var(--warn)] text-[var(--navy)]"
                         }`}
                       >
                         <span className="block skew-x-12">{project.tag}</span>
@@ -370,9 +370,9 @@ export default function Home() {
                           href={link.href}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-display flex items-center gap-2 text-lg text-[#e60012] hover:underline"
+                          className="font-display flex items-center gap-2 text-lg text-[var(--accent)] hover:underline"
                         >
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[var(--accent)] text-xs">
                             A
                           </span>
                           {link.label}
@@ -405,14 +405,14 @@ export default function Home() {
                 >
                   <Card>
                     <div className="flex flex-col gap-4 md:flex-row md:items-start">
-                      <div className="font-display shrink-0 -skew-x-6 bg-[#e60012] px-4 py-2 text-xl text-white shadow-[4px_4px_0_rgba(120,0,10,0.3)]">
+                      <div className="font-display shrink-0 -skew-x-6 bg-[var(--accent)] px-4 py-2 text-xl text-white shadow-[4px_4px_0_rgba(var(--ink-accent),0.3)]">
                         <span className="block skew-x-6">{job.period}</span>
                       </div>
                       <div>
-                        <h3 className="font-display skew-x-[-8deg] text-xl text-[#0a2ec4] md:text-2xl">
+                        <h3 className="font-display skew-x-[-8deg] text-xl text-[var(--deep)] md:text-2xl">
                           {job.role}
                         </h3>
-                        <p className="font-bold text-[#1f8de0]">
+                        <p className="font-bold text-[var(--cool-deep)]">
                           {job.company}
                         </p>
                         <p className="mt-2 leading-relaxed">{job.detail}</p>
@@ -436,7 +436,7 @@ export default function Home() {
             </Reveal>
             <Reveal from="right" delay={120}>
               <Card>
-                <p className="font-display skew-x-[-8deg] text-2xl text-[#0a2ec4] md:text-3xl">
+                <p className="font-display skew-x-[-8deg] text-2xl text-[var(--deep)] md:text-3xl">
                   Initiate Social Link?
                 </p>
                 <p className="mt-3 text-base leading-relaxed md:text-lg">
@@ -444,7 +444,7 @@ export default function Home() {
                 </p>
                 <a
                   href={`mailto:${PROFILE.email}`}
-                  className="font-display mt-6 inline-block max-w-full -skew-x-2 bg-[#e60012] px-4 py-2.5 text-base break-all text-white shadow-[6px_6px_0_rgba(120,0,10,0.3)] transition-transform hover:-translate-y-1 md:-skew-x-6 md:px-8 md:py-3 md:text-2xl"
+                  className="font-display mt-6 inline-block max-w-full -skew-x-2 bg-[var(--accent)] px-4 py-2.5 text-base break-all text-white shadow-[6px_6px_0_rgba(var(--ink-accent),0.3)] transition-transform hover:-translate-y-1 md:-skew-x-6 md:px-8 md:py-3 md:text-2xl"
                 >
                   <span className="block skew-x-6">{PROFILE.email}</span>
                 </a>
@@ -455,7 +455,7 @@ export default function Home() {
                       href={social.href}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-display -skew-x-6 border-2 border-[#0a2ec4] px-5 py-2 text-lg text-[#0a2ec4] transition-colors hover:bg-[#0a2ec4] hover:text-white"
+                      className="font-display -skew-x-6 border-2 border-[var(--deep)] px-5 py-2 text-lg text-[var(--deep)] transition-colors hover:bg-[var(--deep)] hover:text-white"
                     >
                       <span className="block skew-x-6">{social.name}</span>
                     </a>
@@ -464,7 +464,7 @@ export default function Home() {
               </Card>
             </Reveal>
             <Reveal from="up" delay={240}>
-              <p className="mt-10 text-center text-sm font-bold tracking-[0.3em] text-[#9ff0ff] [text-shadow:1px_1px_0_rgba(3,18,110,0.6)] lg:text-right">
+              <p className="mt-10 text-center text-sm font-bold tracking-[0.3em] text-[var(--glow)] [text-shadow:1px_1px_0_rgba(var(--ink),0.6)] lg:text-right">
                 Ⓐ CONFIRM&nbsp;&nbsp;&nbsp;Ⓑ CLOSE
               </p>
             </Reveal>

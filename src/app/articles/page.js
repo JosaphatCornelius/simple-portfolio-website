@@ -74,6 +74,21 @@ export default async function ArticlesPage() {
                       </span>
                     </div>
                     <p className="mt-3 leading-relaxed">{article.summary}</p>
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                      <span className="font-display -skew-x-12 bg-[#03124d] px-2.5 py-0.5 text-xs tracking-wide text-[#9ff0ff]">
+                        <span className="block skew-x-12">
+                          {article.readingMinutes} MIN READ
+                        </span>
+                      </span>
+                      {(article.tags ?? []).map((tag) => (
+                        <span
+                          key={tag}
+                          className="font-display -skew-x-12 border-2 border-[#0a2ec4] px-2.5 py-0.5 text-xs tracking-wide text-[#0a2ec4] uppercase"
+                        >
+                          <span className="block skew-x-12">#{tag}</span>
+                        </span>
+                      ))}
+                    </div>
                     <p className="font-display mt-4 flex items-center gap-2 text-lg text-[#e60012]">
                       <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
                         A

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { playSound } from "./_components/sound";
+import { ProjectCard } from "./_components/project-card";
+import { ContactCard } from "./_components/contact-card";
 import { Reveal } from "./_components/reveal";
 import {
   ABOUT_PARAGRAPHS,
@@ -22,6 +24,7 @@ import {
   MobileMenu,
   SectionTitle,
   SocialChips,
+  TechChip,
   WalletBox,
 } from "./_components/p3r";
 
@@ -191,14 +194,6 @@ function SkillBar({ name, level }) {
   );
 }
 
-function TechChip({ children }) {
-  return (
-    <span className="font-display -skew-x-12 bg-[#0a2ec4] px-3 py-0.5 text-sm text-[#9ff0ff]">
-      <span className="block skew-x-12">{children}</span>
-    </span>
-  );
-}
-
 export default function Home() {
   const [activeId, setActiveId] = useState("home");
 
@@ -355,46 +350,7 @@ export default function Home() {
                   delay={index * 100}
                   className={index % 2 ? "lg:ml-12" : ""}
                 >
-                  <Card>
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h3 className="font-display skew-x-[-10deg] text-2xl text-[#0a2ec4] md:text-3xl">
-                        {project.title}
-                      </h3>
-                      <span
-                        className={`font-display -skew-x-12 px-3 py-0.5 text-sm ${
-                          project.tag === "Completed"
-                            ? "bg-[#2de1ff] text-[#03124d]"
-                            : "bg-[#ffd400] text-[#03124d]"
-                        }`}
-                      >
-                        <span className="block skew-x-12">{project.tag}</span>
-                      </span>
-                    </div>
-                    <p className="mt-3 leading-relaxed">
-                      {project.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {project.stack.map((tech) => (
-                        <TechChip key={tech}>{tech}</TechChip>
-                      ))}
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-5">
-                      {project.links.map((link) => (
-                        <a
-                          key={link.label}
-                          href={link.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-display flex items-center gap-2 text-lg text-[#e60012] hover:underline"
-                        >
-                          <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
-                            A
-                          </span>
-                          {link.label}
-                        </a>
-                      ))}
-                    </div>
-                  </Card>
+                  <ProjectCard project={project} />
                 </Reveal>
               ))}
             </div>
@@ -463,6 +419,7 @@ export default function Home() {
                 >
                   <span className="block skew-x-6">{PROFILE.email}</span>
                 </a>
+                <ContactCard />
                 <div className="mt-8 flex gap-4">
                   {PROFILE.socials.map((social) => (
                     <a

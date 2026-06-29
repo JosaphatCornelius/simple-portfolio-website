@@ -1,6 +1,7 @@
 import { Anton, Geist, Geist_Mono } from "next/font/google";
 import { PageFlight } from "./_components/page-flight";
 import { SoundToggle } from "./_components/sound";
+import { SITE_URL } from "./_lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,9 +21,19 @@ const anton = Anton({
 });
 
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Josaphat Cornelius — Full Stack Developer",
   description:
     "Portfolio of Josaphat Cornelius, a full-stack developer in Jakarta building seamless, user-friendly web, Android, and game experiences.",
+  openGraph: {
+    siteName: "Josaphat Cornelius — Portfolio",
+    type: "website",
+    locale: "en_US",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }) {

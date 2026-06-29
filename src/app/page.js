@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { playSound } from "./_components/sound";
 import { ProjectCard } from "./_components/project-card";
 import { ContactCard } from "./_components/contact-card";
 import { Reveal } from "./_components/reveal";
@@ -84,7 +85,11 @@ function MenuNav({ activeId }) {
               }}
             >
               {item.href ? (
-                <Link href={item.href} className="group relative block">
+                <Link
+                  href={item.href}
+                  onMouseEnter={() => playSound("blip")}
+                  className="group relative block"
+                >
                   <MenuLabel isActive={false} color={MENU_COLORS[index]}>
                     {item.label}
                   </MenuLabel>
@@ -92,7 +97,11 @@ function MenuNav({ activeId }) {
               ) : (
                 <button
                   type="button"
-                  onClick={() => scrollToSection(item.id)}
+                  onMouseEnter={() => playSound("blip")}
+                  onClick={() => {
+                    playSound("select");
+                    scrollToSection(item.id);
+                  }}
                   className="group relative block cursor-pointer"
                 >
                   <MenuLabel isActive={isActive} color={MENU_COLORS[index]}>
@@ -127,7 +136,10 @@ function CommandHint({ activeId }) {
       <div className="font-display flex items-center gap-6 text-2xl">
         <button
           type="button"
-          onClick={() => scrollToSection(next.id)}
+          onClick={() => {
+            playSound("select");
+            scrollToSection(next.id);
+          }}
           className="group flex cursor-pointer items-center gap-2"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
@@ -139,7 +151,10 @@ function CommandHint({ activeId }) {
         </button>
         <button
           type="button"
-          onClick={() => scrollToSection("home")}
+          onClick={() => {
+            playSound("select");
+            scrollToSection("home");
+          }}
           className="group flex cursor-pointer items-center gap-2"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">

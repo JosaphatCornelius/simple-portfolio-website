@@ -15,6 +15,32 @@ export const MENU_COLORS = [
 export const MENU_OFFSETS = [0, 36, 6, 48, 20, 40];
 export const MENU_TILTS = [-2, -1.5, -2.5, -1, -2, -1.5];
 
+// One entry of the big skewed menu: torn pink/white slash behind the active
+// item, palette color otherwise. Shared by the home MenuNav and SideMenu.
+export function MenuLabel({ isActive, color, children }) {
+  return (
+    <>
+      {isActive && (
+        <>
+          <span className="absolute -inset-x-8 inset-y-1 -rotate-2 bg-[#ff6ea8] [clip-path:polygon(4%_18%,100%_0,94%_88%,0_100%)]" />
+          <span className="absolute -inset-x-7 inset-y-1 -rotate-2 bg-white [clip-path:polygon(3%_15%,100%_2%,95%_85%,0_98%)]" />
+        </>
+      )}
+      <span
+        className="font-display relative block skew-x-[-12deg] text-5xl tracking-wide transition-all duration-150 group-hover:translate-x-2 xl:text-6xl"
+        style={{
+          color: isActive ? "#e60012" : color,
+          textShadow: isActive
+            ? "3px 3px 0 rgba(120,0,10,0.35)"
+            : "3px 4px 0 rgba(3,18,110,0.45)",
+        }}
+      >
+        {children}
+      </span>
+    </>
+  );
+}
+
 const MENU_LINKS = [
   { label: "HOME", href: "/#home" },
   { label: "ABOUT", href: "/#about" },

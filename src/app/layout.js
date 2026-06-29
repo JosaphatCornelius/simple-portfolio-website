@@ -1,5 +1,6 @@
 import { Anton, Geist, Geist_Mono } from "next/font/google";
 import { PageFlight } from "./_components/page-flight";
+import { SoundToggle } from "./_components/sound";
 import { SITE_URL } from "./_lib/site";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <PageFlight>{children}</PageFlight>
+        <SoundToggle />
       </body>
     </html>
   );

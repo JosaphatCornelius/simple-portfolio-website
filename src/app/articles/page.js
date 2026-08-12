@@ -39,10 +39,10 @@ export default async function ArticlesPage() {
           href="/"
           className="font-display group flex items-center gap-2 text-2xl text-white"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[#0a2ec4]">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-base transition-colors group-hover:bg-white group-hover:text-[var(--deep)]">
             B
           </span>
-          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]">
+          <span className="skew-x-[-8deg] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)]">
             Back
           </span>
         </Link>
@@ -52,7 +52,7 @@ export default async function ArticlesPage() {
         <div className="lg:ml-auto lg:w-[52%] lg:pr-[4%]">
           <Link
             href="/"
-            className="font-display mb-6 inline-block skew-x-[-10deg] text-xl text-[#9ff0ff] hover:text-white [text-shadow:2px_2px_0_rgba(3,18,110,0.5)]"
+            className="font-display mb-6 inline-block skew-x-[-10deg] text-xl text-[var(--glow)] hover:text-white [text-shadow:2px_2px_0_rgba(var(--ink),0.5)]"
           >
             ← BACK TO MENU
           </Link>
@@ -72,10 +72,10 @@ export default async function ArticlesPage() {
                 >
                   <Card className="transition-transform group-hover:-translate-y-1">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h2 className="font-display skew-x-[-10deg] text-2xl text-[#0a2ec4] group-hover:text-[#e60012] md:text-3xl">
+                      <h2 className="font-display skew-x-[-10deg] text-2xl text-[var(--deep)] group-hover:text-[var(--accent)] md:text-3xl">
                         {article.title}
                       </h2>
-                      <span className="font-display -skew-x-12 bg-[#e60012] px-3 py-0.5 text-sm text-white">
+                      <span className="font-display -skew-x-12 bg-[var(--accent)] px-3 py-0.5 text-sm text-white">
                         <span className="block skew-x-12">
                           {formatArticleDate(article.date)}
                         </span>
@@ -97,8 +97,8 @@ export default async function ArticlesPage() {
                         </span>
                       ))}
                     </div>
-                    <p className="font-display mt-4 flex items-center gap-2 text-lg text-[#e60012]">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#e60012] text-xs">
+                    <p className="font-display mt-4 flex items-center gap-2 text-lg text-[var(--accent)]">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[var(--accent)] text-xs">
                         A
                       </span>
                       Read

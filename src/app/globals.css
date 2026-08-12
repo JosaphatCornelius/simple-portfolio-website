@@ -1,8 +1,98 @@
 @import "tailwindcss";
 
+/* Semantic palette. The P3 set (default) is the original underwater-blue
+   look; html[data-theme="p4"|"p5"] retint every component because all
+   color usage goes through these variables. --ink/--ink-accent are bare
+   R,G,B triples consumed as rgba(var(--ink), <alpha>) in shadows. */
 :root {
-  --background: #0a2ec4;
+  --accent: #e60012;
+  --accent-soft: #ff2d78;
+  --accent-slash: #ff6ea8;
+  --cool: #2de1ff;
+  --cool-deep: #1f8de0;
+  --warn: #ffd400;
+  --deep: #0a2ec4;
+  --navy: #03124d;
+  --glow: #9ff0ff;
+  --paper-tint: #eafbff;
+  --gauge-track: #08214f;
+  --grad-a: #2adcf9;
+  --grad-b: #13a5ef;
+  --grad-c: #0b55dc;
+  --grad-d: #0729ad;
+  --grad-e: #041672;
+  --menu-1: #c4f5ff;
+  --menu-2: #8eeaff;
+  --menu-3: #5cd5fb;
+  --menu-4: #39b4f1;
+  --menu-5: #2b91e8;
+  --menu-6: #2b76e0;
+  --overlay-a: rgba(13, 60, 200, 0.97);
+  --overlay-b: rgba(4, 22, 110, 0.98);
+  --ink: 3, 18, 110;
+  --ink-accent: 120, 0, 10;
+  --background: var(--deep);
   --foreground: #ffffff;
+}
+
+/* Persona 4: TV-static yellow and black. */
+html[data-theme="p4"] {
+  --accent: #1c1c1c;
+  --accent-soft: #3c3c3c;
+  --accent-slash: #8c8c8c;
+  --cool: #ffcf24;
+  --cool-deep: #b88600;
+  --warn: #ff8a00;
+  --deep: #2a2a2a;
+  --navy: #1a1a1a;
+  --glow: #ffe66b;
+  --paper-tint: #fff7da;
+  --gauge-track: #2b2b2b;
+  --grad-a: #ffe96b;
+  --grad-b: #ffd02e;
+  --grad-c: #f5b000;
+  --grad-d: #c27c00;
+  --grad-e: #7a4d00;
+  --menu-1: #fff3b0;
+  --menu-2: #ffe27a;
+  --menu-3: #ffd02e;
+  --menu-4: #f0ad00;
+  --menu-5: #d18f00;
+  --menu-6: #a86e00;
+  --overlay-a: rgba(40, 32, 0, 0.97);
+  --overlay-b: rgba(20, 14, 0, 0.98);
+  --ink: 60, 42, 0;
+  --ink-accent: 0, 0, 0;
+}
+
+/* Persona 5: all-out-attack red and black. */
+html[data-theme="p5"] {
+  --accent: #0d0d0d;
+  --accent-soft: #2b2b2b;
+  --accent-slash: #1a1a1a;
+  --cool: #ff3b3b;
+  --cool-deep: #c40010;
+  --warn: #ffffff;
+  --deep: #c40010;
+  --navy: #1c000a;
+  --glow: #ffc9cf;
+  --paper-tint: #ffecec;
+  --gauge-track: #330008;
+  --grad-a: #ff5a3c;
+  --grad-b: #e60012;
+  --grad-c: #99000d;
+  --grad-d: #40000a;
+  --grad-e: #120004;
+  --menu-1: #ffd9d9;
+  --menu-2: #ffaaaa;
+  --menu-3: #ff7070;
+  --menu-4: #f53b3b;
+  --menu-5: #d40000;
+  --menu-6: #a30000;
+  --overlay-a: rgba(50, 0, 6, 0.97);
+  --overlay-b: rgba(18, 0, 4, 0.98);
+  --ink: 30, 0, 5;
+  --ink-accent: 0, 0, 0;
 }
 
 @theme inline {
@@ -11,11 +101,11 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-anton);
-  --color-menu-red: #e60012;
-  --color-menu-pink: #ff2d78;
-  --color-menu-cyan: #2de1ff;
-  --color-menu-yellow: #ffd400;
-  --color-deep-navy: #03124d;
+  --color-menu-red: var(--accent);
+  --color-menu-pink: var(--accent-soft);
+  --color-menu-cyan: var(--cool);
+  --color-menu-yellow: var(--warn);
+  --color-deep-navy: var(--navy);
 }
 
 html {

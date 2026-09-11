@@ -33,6 +33,13 @@
   --ink-accent: 120, 0, 10;
   --background: var(--deep);
   --foreground: #ffffff;
+
+  scrollbar-width: none;          /* For Firefox and modern compliant browsers */
+  -ms-overflow-style: none;       
+}
+
+:root::-webkit-scrollbar {
+    display: none;
 }
 
 /* Persona 4: TV-static yellow and black. */

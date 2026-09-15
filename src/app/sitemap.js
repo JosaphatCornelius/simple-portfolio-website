@@ -3,7 +3,7 @@ import { getAllArticles } from "./_lib/articles";
 export default async function sitemap() {
   const baseURL =
     process.env.NEXT_PUBLIC_SITE_URL ??
-    "https://portfolio.josaphatcornelius.tech/";
+    "https://portfolio.josaphatcornelius.tech";
   const articles = await getAllArticles();
 
   return [

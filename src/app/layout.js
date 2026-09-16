@@ -52,6 +52,12 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} ${anton.variable} h-full antialiased`}
       data-scroll-behavior="smooth"
     >
+      <head>
+        <meta
+          name="google-site-verification"
+          content="BqaQyUKyqk3ySzPMCq7dYUEwuzxfzvPuUmeNl58sTIo"
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <script dangerouslySetInnerHTML={{ __html: paletteInitScript }} />
         <PageFlight>{children}</PageFlight>

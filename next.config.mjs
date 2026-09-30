@@ -3,6 +3,7 @@ import createMDX from "@next/mdx";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx"],
+  output: "standalone",
 };
 
 const withMDX = createMDX({
@@ -11,7 +12,6 @@ const withMDX = createMDX({
   options: {
     rehypePlugins: ["rehype-slug", "rehype-highlight"],
   },
-  output: "standalone",
 });
 
 export default withMDX(nextConfig);

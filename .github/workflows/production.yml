@@ -66,4 +66,7 @@ jobs:
           echo "Start Deployment Production";
           echo ${{ secrets.GITHUB_TOKEN }} | docker --context personal-vps login ghcr.io --username ${{ github.actor }} --password-stdin;
           sleep 5;
-          DOCKER_TAG=${{ env.DOCKER_TAG }} REGISTRY=${{ env.REGISTRY }} NAMESPACE=${{ env.NAMESPACE }} CONTAINER_NAME=${{ github.event.repository.name }} docker --context personal-vps compose -f docker-compose.yml up web -d;
+          DOCKER_TAG=${{ env.DOCKER_TAG }} REGISTRY=${{ env.REGISTRY }} NAMESPACE=${{ env.NAMESPACE }} CONTAINER_NAME=${{ github.event.repository.name }} docker --context personal-vps compose -f docker-compose.yml up -d;
+          sleep 5;
+          echo "Cleaning up dangling images";
+          docker --context personal-vps image prune -f;

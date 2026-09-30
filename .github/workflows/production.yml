@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-26
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
@@ -43,7 +43,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ github.event.repository.name }}:${{env.DOCKER_TAG}}
 
   deploy:
-    runs-on: ubuntu-26
+    runs-on: ubuntu-24.04
     needs: build
     permissions:
       contents: read

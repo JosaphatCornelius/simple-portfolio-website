@@ -11,6 +11,7 @@ const withMDX = createMDX({
   options: {
     rehypePlugins: ["rehype-slug", "rehype-highlight"],
   },
+  output: "standalone",
 });
 
 export default withMDX(nextConfig);

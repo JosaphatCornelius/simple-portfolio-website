@@ -305,14 +305,14 @@ export function SectionTitle({ children }) {
   );
 }
 
-export function Card({ children, className = "" }) {
+export function Card({ children, className = "", isSkewed = true }) {
   // Shear displacement grows with element height, so tall mobile cards get a
   // gentler skew; content corners would otherwise cross the card edge.
   return (
     <div
-      className={`-skew-x-1 border-l-8 border-[var(--cool)] bg-white text-[#0c1430] shadow-[10px_10px_0_rgba(var(--ink),0.45)] md:-skew-x-3 ${className}`}
+      className={`${isSkewed ? '-skew-x-1' : ''} border-l-8 border-[var(--cool)] bg-white text-[#0c1430] shadow-[10px_10px_0_rgba(var(--ink),0.45)] md:${isSkewed ? '-skew-x-3' : ''} ${className} wrap-break-word`}
     >
-      <div className="skew-x-1 p-5 md:skew-x-3 md:p-8">{children}</div>
+      <div className={`${isSkewed ? 'skew-x-1' : ''} p-5 md:${isSkewed ? 'skew-x-3' : ''} md:p-8`}>{children}</div>
     </div>
   );
 }

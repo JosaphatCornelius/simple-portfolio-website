@@ -70,6 +70,7 @@ export const PROJECTS = [
         href: "https://github.com/JosaphatCornelius/simple-portfolio-website",
       },
     ],
+    date: new Date("2026-06-04")
   },
   {
     slug: "e-ticketing-system",
@@ -96,6 +97,7 @@ export const PROJECTS = [
         href: "https://github.com/JosaphatCornelius/E-Ticketing_Backend",
       },
     ],
+    date: new Date("2025-05-07")
   },
   {
     slug: "should-i-buy-it",
@@ -119,6 +121,7 @@ export const PROJECTS = [
         href: "https://github.com/JosaphatCornelius/should-i-buy-it",
       },
     ],
+    date: new Date("2026-06-03")
   },
   {
     slug: "react-native-app",
@@ -138,6 +141,7 @@ export const PROJECTS = [
     links: [
       { label: "Demo", href: "https://www.youtube.com/watch?v=UXfdgU3EXvQ" },
     ],
+    date: new Date("2023-11-25")
   },
   {
     slug: "f1-driving-experience",
@@ -160,6 +164,7 @@ export const PROJECTS = [
         href: "https://github.com/JosaphatCornelius/Formula-1-Website-Project",
       },
     ],
+    date: new Date("2023-05-25")
   },
 ];
 

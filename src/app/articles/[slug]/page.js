@@ -123,7 +123,7 @@ export default async function ArticlePage({ params }) {
               </ul>
             </nav>
           )}
-          <Card>
+          <Card isSkewed={false}>
             <article>
               <Article />
             </article>

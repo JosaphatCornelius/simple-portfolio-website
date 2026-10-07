@@ -1,4 +1,5 @@
 import { getAllArticles } from "./_lib/articles";
+import { PROJECTS } from "../app/_components/data";
 
 export default async function sitemap() {
   const baseURL =
@@ -25,5 +26,11 @@ export default async function sitemap() {
       changeFrequency: "yearly",
       priority: 0.6,
     })),
+    ...PROJECTS.map((project) => ({
+      url: `${baseURL}/projects/${project.slug}`,
+      lastModified: new Date(project.date),
+      changeFrequency: "yearly",
+      priority: 0.8
+    }))
   ];
 }

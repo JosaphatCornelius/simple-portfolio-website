@@ -5,7 +5,7 @@ Finally made a personal portfolio website. This portfolio is inspired by one of 
 A personal portfolio website is due by now. I need one ASAP and this one turned out really cool. The Persona franchise is striking and bold, I'm a huge fan of that.
 
 ## Build status
-CICD workflow on the way, I gotta purchase a VPS first.
+Published in self-hosted VPS.
 
 ## Code style
 Follows the Atomic Design patterns.

@@ -1,36 +1,31 @@
 import { getAllArticles } from "./_lib/articles";
 import { PROJECTS } from "../app/_components/data";
+import { SITE_URL } from "./_lib/site";
 
 export default async function sitemap() {
-  const baseURL = process.env.NEXT_PUBLIC_SITE_URL;
-
-  if (!baseURL) {
-    throw new Error("Base URL is not set");
-  }
-
   const articles = await getAllArticles();
 
   return [
     {
-      url: baseURL,
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: `${baseURL}/articles`,
+      url: `${SITE_URL}/articles`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
     ...articles.map((article) => ({
-      url: `${baseURL}/articles/${article.slug}`,
+      url: `${SITE_URL}/articles/${article.slug}`,
       lastModified: new Date(article.date),
       changeFrequency: "yearly",
       priority: 0.6,
     })),
     ...PROJECTS.map((project) => ({
-      url: `${baseURL}/projects/${project.slug}`,
+      url: `${SITE_URL}/projects/${project.slug}`,
       lastModified: new Date(project.date),
       changeFrequency: "yearly",
       priority: 0.8,

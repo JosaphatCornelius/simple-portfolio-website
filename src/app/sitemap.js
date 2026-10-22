@@ -3,6 +3,11 @@ import { PROJECTS } from "../app/_components/data";
 
 export default async function sitemap() {
   const baseURL = process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (!baseURL) {
+    throw new Error("Base URL is not set");
+  }
+
   const articles = await getAllArticles();
 
   return [

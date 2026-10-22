@@ -41,6 +41,8 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ github.event.repository.name }}:${{env.DOCKER_TAG}}
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}
 
   deploy:
     runs-on: ubuntu-24.04

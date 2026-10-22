@@ -20,3 +20,5 @@ jobs:
           context: .
           push: false
           tags: test-build:latest
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}

@@ -2,9 +2,12 @@ import { getAllArticles } from "./_lib/articles";
 import { PROJECTS } from "../app/_components/data";
 
 export default async function sitemap() {
-  const baseURL =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    "https://portfolio.josaphatcornelius.tech";
+  const baseURL = process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (!baseURL) {
+    throw new Error("Base URL is not set");
+  }
+
   const articles = await getAllArticles();
 
   return [
@@ -30,7 +33,7 @@ export default async function sitemap() {
       url: `${baseURL}/projects/${project.slug}`,
       lastModified: new Date(project.date),
       changeFrequency: "yearly",
-      priority: 0.8
-    }))
+      priority: 0.8,
+    })),
   ];
 }

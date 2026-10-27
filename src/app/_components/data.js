@@ -4,7 +4,6 @@ export const PROFILE = {
   role: "FULL STACK DEVELOPER",
   tagline:
     "Full Stack Developer in Jakarta building seamless, user-friendly web, Android, and game experiences that feel alive.",
-  email: "jojo.31.liu@gmail.com",
   socials: [
     {
       label: "GH",
@@ -16,7 +15,16 @@ export const PROFILE = {
       name: "LinkedIn",
       href: "https://www.linkedin.com/in/josaphat-cornelius-540141277/",
     },
-    { label: "@", name: "Email", href: "mailto:jojo.31.liu@gmail.com" },
+    {
+      label: "YT",
+      name: "YouTube",
+      href: "https://www.youtube.com/@josaphatc",
+    },
+    {
+      label: "IG",
+      name: "Instagram",
+      href: "https://www.instagram.com/josaphatcornelius/",
+    }
   ],
 };
 

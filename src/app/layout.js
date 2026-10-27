@@ -42,9 +42,6 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-  },
-  verification: {
-    google: 'BqaQyUKyqk3ySzPMCq7dYUEwuzxfzvPuUmeNl58sTIo'
   }
 };
 

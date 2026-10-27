@@ -28,6 +28,7 @@ import {
   TechChip,
   WalletBox,
 } from "./_components/p3r";
+import { EmailButton } from "./_components/email-button";
 
 const SECTIONS = [
   { id: "home", label: "HOME", hint: "Welcome" },
@@ -248,15 +249,15 @@ export default function Home() {
                 <p className="font-display skew-x-[-10deg] text-xl text-[var(--cool)] [text-shadow:2px_2px_0_rgba(var(--ink),0.5)] md:text-2xl">
                   — {PROFILE.name}
                 </p>
-                <h1 className="font-display skew-x-[-10deg] text-6xl leading-[0.9] text-white [text-shadow:5px_5px_0_rgba(var(--ink),0.55)] md:text-8xl">
+                <p className="font-display skew-x-[-10deg] text-6xl leading-[0.9] text-white [text-shadow:5px_5px_0_rgba(var(--ink),0.55)] md:text-8xl">
                   FULL
                   <br />
                   STACK
-                </h1>
+                </p>
               </div>
-              <p className="mt-6 max-w-md text-base font-medium text-[var(--glow)] [text-shadow:1px_1px_0_rgba(var(--ink),0.6)] md:mt-8 md:text-lg">
+              <h1 className="mt-6 max-w-md text-base font-medium text-[var(--glow)] [text-shadow:1px_1px_0_rgba(var(--ink),0.6)] md:mt-8 md:text-lg">
                 {PROFILE.tagline}
-              </p>
+              </h1>
               <button
                 type="button"
                 onClick={() => scrollToSection("about")}
@@ -390,14 +391,11 @@ export default function Home() {
                 <p className="mt-3 text-base leading-relaxed md:text-lg">
                   {CONTACT_INTRO}
                 </p>
-                <a
-                  href={`mailto:${PROFILE.email}`}
-                  className="font-display mt-6 inline-block max-w-full -skew-x-2 bg-[var(--accent)] px-4 py-2.5 text-base break-all text-white shadow-[6px_6px_0_rgba(var(--ink-accent),0.3)] transition-transform hover:-translate-y-1 md:-skew-x-6 md:px-8 md:py-3 md:text-2xl"
-                >
-                  <span className="block skew-x-6">{PROFILE.email}</span>
-                </a>
+
+                <EmailButton />
+
                 <ContactCard />
-                <div className="mt-8 flex gap-4">
+                <div className="mt-8 flex gap-4 overflow-auto lg:overflow-visible">
                   {PROFILE.socials.map((social) => (
                     <a
                       key={social.name}

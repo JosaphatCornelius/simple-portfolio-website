@@ -1,4 +1,5 @@
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { PROFILE } from "./_components/data"; 
 import { Anton, Geist, Geist_Mono } from "next/font/google";
 import { SITE_URL } from "./_lib/site";
 import { PaletteToggle } from "./_components/palette-toggle";
@@ -26,12 +27,16 @@ const anton = Anton({
   subsets: ["latin"],
 });
 
-const PageFlight = dynamic(() => import('./_components/page-flight').then(mod => mod.PageFlight));
-const SoundToggle = dynamic(() => import('./_components/sound').then(mod => mod.SoundToggle));
+const PageFlight = dynamic(() =>
+  import("./_components/page-flight").then((mod) => mod.PageFlight),
+);
+const SoundToggle = dynamic(() =>
+  import("./_components/sound").then((mod) => mod.SoundToggle),
+);
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Josaphat Cornelius — Full Stack Software Engineer", 
+  title: "Josaphat Cornelius a Senior Full Stack Software Engineer",
   description:
     "Portfolio of Josaphat Cornelius, a full-stack developer in Jakarta building seamless web, Android, and game experiences.",
   openGraph: {
@@ -52,25 +57,27 @@ export const metadata = {
 };
 
 export const viewport = {
-  width: 'device-width',
+  width: "device-width",
   initialScale: 1,
   maximumScale: 1,
 };
 
 export default function RootLayout({ children }) {
+  // Inside your RootLayout function:
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Josaphat Cornelius",
     jobTitle: "Full Stack Developer",
     url: SITE_URL,
+    // This automatically extracts all the URLs from your array
+    sameAs: PROFILE.socials.map((social) => social.href),
     address: {
       "@type": "PostalAddress",
       addressLocality: "Jakarta",
       addressCountry: "ID",
     },
   };
-
   return (
     <html
       lang="en"

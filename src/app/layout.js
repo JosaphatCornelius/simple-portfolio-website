@@ -36,7 +36,7 @@ const SoundToggle = dynamic(() =>
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Josaphat Cornelius a Senior Full Stack Software Engineer",
+  title: "Josaphat Cornelius - Full-Stack Software Engineer",
   description:
     "Portfolio of Josaphat Cornelius, a full-stack developer in Jakarta building seamless web, Android, and game experiences.",
   openGraph: {

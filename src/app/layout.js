@@ -38,7 +38,7 @@ export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Josaphat Cornelius - Full-Stack Software Engineer",
   description:
-    "Portfolio of Josaphat Cornelius, a full-stack developer in Jakarta building seamless web, Android, and game experiences.",
+    "Portfolio of Josaphat Cornelius, a full-stack software engineer in Jakarta building seamless web, Android, and game experiences.",
   openGraph: {
     siteName: "Josaphat Cornelius — Portfolio",
     type: "website",
@@ -68,7 +68,7 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Josaphat Cornelius",
-    jobTitle: "Full Stack Developer",
+    jobTitle: "Full-Stack Software Engineer",
     url: SITE_URL,
     // This automatically extracts all the URLs from your array
     sameAs: PROFILE.socials.map((social) => social.href),

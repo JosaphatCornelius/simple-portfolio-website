@@ -1,9 +1,9 @@
 // Content ported from simple-portfolio-website (src/app/page.js).
 export const PROFILE = {
   name: "JOSAPHAT CORNELIUS",
-  role: "FULL STACK DEVELOPER",
+  role: "FULL-STACK SOFTWARE ENGINEER",
   tagline:
-    "Full Stack Developer in Jakarta building seamless, user-friendly web, Android, and game experiences that feel alive.",
+    "Full-Stack Software Engineer in Jakarta building seamless, user-friendly web, Android, and game experiences that feel alive.",
   socials: [
     {
       label: "GH",
@@ -182,7 +182,7 @@ export const EXPERIENCE = [
     role: "IT Project Development & Infrastructure Support",
     company: "PT Asuransi Artarindo · Full-time",
     detail:
-      "Full Stack Developer and SQA on internal systems in Jakarta, applying full-stack development and design thinking on-site.",
+      "Full-Stack Software Engineer and SQA on internal systems in Jakarta, applying full-stack development and design thinking on-site.",
   },
   {
     period: "JUL 2024 — DEC 2024",

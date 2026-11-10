@@ -2,11 +2,13 @@
 
 [![Build Status](https://github.com/JosaphatCornelius/simple-portfolio-website/actions/workflows/production.yml/badge.svg)](https://github.com/JosaphatCornelius/simple-portfolio-website/actions/workflows/production.yml)
 
-A personal portfolio inspired by the Persona franchise, with a bold UI modeled on the Persona 3 Reload pause menu. It covers who I am, my experience, education, and projects.
+A personal portfolio inspired by the Persona franchise, with a bold UI modeled on the Persona 3 Reload pause menu, with color palette switcher. It covers who I am, my experience, education, and projects.
 
 Live Site: [josaphatcornelius.tech](https://josaphatcornelius.tech)
 
 ![Portfolio screenshot](https://github.com/user-attachments/assets/27c99a12-67d8-4f62-83ca-5b29a5d8be44)
+![Portfolio screenshot](https://github.com/user-attachments/assets/7c7a5996-bdad-4e51-b9cc-14956f2f80df)
+![Portfolio screenshot](https://github.com/user-attachments/assets/a6bc5c06-9611-4c4e-a3a8-f4d16c74764c)
 
 ## Tech Stack
 

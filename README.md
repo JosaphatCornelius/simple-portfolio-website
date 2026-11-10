@@ -1,47 +1,43 @@
-## Personal Portfolio Website
-Finally made a personal portfolio website. This portfolio is inspired by one of my favorite franchise to ever exist, that is Persona. You will find general information regarding who IAM (ha get it?), my experiences, education and projects.
+# Personal Portfolio Website
 
-## Motivation
-A personal portfolio website is due by now. I need one ASAP and this one turned out really cool. The Persona franchise is striking and bold, I'm a huge fan of that.
+[![Build Status](https://github.com/JosaphatCornelius/simple-portfolio-website/actions/workflows/production.yml/badge.svg)](https://github.com/JosaphatCornelius/simple-portfolio-website/actions/workflows/production.yml)
 
-## Build status
-Published in self-hosted VPS.
+A personal portfolio inspired by the Persona franchise, with a bold UI modeled on the Persona 3 Reload pause menu. It covers who I am, my experience, education, and projects.
 
-## Code style
-Follows the Atomic Design patterns.
+![Portfolio screenshot](https://github.com/user-attachments/assets/27c99a12-67d8-4f62-83ca-5b29a5d8be44)
 
-## Screenshots
-<img width="1919" height="875" alt="image" src="https://github.com/user-attachments/assets/27c99a12-67d8-4f62-83ca-5b29a5d8be44" />
+## Tech Stack
 
-## Tech/framework used
-NextJS without TypeScript
+* **Core:** Next.js (JavaScript, no TypeScript)
+* **Database:** None
+* **Infrastructure:** Docker on a self-hosted VPS
+* **CI/CD:** GitHub Actions
+* **Code style:** Atomic Design
 
-<b>Built with</b>
-- [NextJS]([https://electron.atom.io](https://nextjs.org/))
+## Quick Start
 
-## Features
-Striking features and easy to UI friendly.
+Instructions to get the development environment running locally.
 
-## Installation
-- Clone the project.
-- Ensure Node is installed on your local computer.
-- Run 'npm install' or other package manager of your preference.
-- Voila!
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/your-repo-name.git
+cd your-repo-name
 
-## API Reference
-None at the moment, will soon be updating
+# Install dependencies and run
+npm install
+npm run dev
+```
 
-## Tests
-Unit testing is in backlog.
+*Note: Ensure you have Node.js installed. You can use any package manager you prefer (npm, yarn, pnpm).*
 
-## How to use?
-You can view my personal details or have this website as reference for your own portfolio website!
+## Usage
 
-## Contribute
-Forks and comments are well appreciated.
+Visit the site to browse my personal details, experience, education, and projects. You're also welcome to use it as a reference for building your own portfolio.
 
-## Credits
-Persona 3 reload pause menu UI. One of their most striking yet.
+There is no API at the moment. Documentation will be added if one is introduced.
 
-## License
-None at the moment.
+## Contributing & License
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Currently unlicensed. All rights reserved.

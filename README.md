@@ -4,6 +4,8 @@
 
 A personal portfolio inspired by the Persona franchise, with a bold UI modeled on the Persona 3 Reload pause menu. It covers who I am, my experience, education, and projects.
 
+Live Site: [josaphatcornelius.tech](https://josaphatcornelius.tech)
+
 ![Portfolio screenshot](https://github.com/user-attachments/assets/27c99a12-67d8-4f62-83ca-5b29a5d8be44)
 
 ## Tech Stack
